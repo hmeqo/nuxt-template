@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "antfu.unocss",
+        "nuxtr.nuxtr-vscode",
+        "vue.volar",
+        "esbenp.prettier-vscode",
+        "ionutvmi.path-autocomplete",
+        "antfu.iconify"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "nuxt-template",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "openapi": "openapi",
+    "generate:sdk": "./scripts/generate-sdk.sh",
+    "generate:ssl": "./scripts/generate-ssl.sh"
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "./apps/admin"
+        }
+    ],
+    "settings": {
+        "typescript.tsdk": "frontend/node_modules/typescript/lib"
+    }
+}
