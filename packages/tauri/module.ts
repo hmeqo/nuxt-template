@@ -2,18 +2,18 @@ import { addComponentsDir, addImportsDir, createResolver, defineNuxtModule } fro
 
 export default defineNuxtModule({
   meta: {
-    name: '@workspace/tauri'
+    name: '@workspace/tauri',
   },
 
-  setup(options, nuxt) {
+  async setup(_options, _nuxt) {
     const resolver = createResolver(import.meta.url)
 
     // Add components
     addComponentsDir({
-      path: resolver.resolve('./components')
+      path: resolver.resolve('./components'),
     })
 
     // Add utils
     addImportsDir(resolver.resolve('./utils'))
-  }
+  },
 })

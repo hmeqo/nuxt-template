@@ -1,7 +1,0 @@
-{
-  "name": "@workspace/backend",
-  "version": "0.1.0",
-  "dependencies": {
-    "@hmeqo/paths": "^0.1.1"
-  }
-}

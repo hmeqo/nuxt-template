@@ -8,53 +8,78 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:8000/api',
+    },
+  },
   modules: [
+    '@workspace-hmeqo/util',
     '@workspace-hmeqo/nuxt-infra',
+    '@workspace-hmeqo/nuxt-web-kit',
+    '@workspace-hmeqo/nuxt-color-mode',
     // '@workspace-hmeqo/pwa',
     '@workspace-hmeqo/unocss',
-    '@workspace-hmeqo/shadcn-unocss'
+    '@workspace-hmeqo/shadcn-unocss',
+    '@workspace-hmeqo/alova',
+    '@workspace/apiclient',
+    'nuxt-csurf',
   ],
   components: [
-    { path: '~/components' }
-    // { path: '~/components/ui', prefix: 'ui', pathPrefix: false, extensions: ['ts'] }
+    { path: '~/components' },
+    // { path: '~/components/ui', prefix: 'ui', pathPrefix: false, extensions: ['ts'] },
   ],
+  imports: {
+    dirs: ['~/stores'],
+    imports: [
+      { from: '~/lib/api', name: 'Apis' },
+      { from: '~/lib/api', name: 'useClient' },
+      { from: '~/lib/router', name: 'getLoginUrl' },
+    ],
+  },
   app: {
     // layoutTransition: { name: 'fade', mode: 'out-in' },
     // pageTransition: { name: 'fade', mode: 'out-in' },
     buildAssetsDir: 'static',
     rootAttrs: {
-      id: 'root'
+      id: 'root',
     },
     head: {
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
-    }
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    },
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/index.css'],
   fonts: {
-    families: [{ name: 'Maple Mono', provider: 'none' }]
+    families: [{ name: 'Maple Mono', provider: 'none' }],
   },
   routeRules: {
     '/**': {
       ssr: false,
-      prerender: true
-    }
+      prerender: true,
+    },
   },
 
   colorMode: {
-    preference: 'dark'
+    preference: 'dark',
+  },
+  csurf: {
+    https: false,
+    cookieKey: 'csrftoken',
+    headerName: 'X-Csrftoken',
+    methodsToProtect: [],
   },
 
   site: {
     url: 'https://example.com',
-    indexable: seoEnabled
+    indexable: seoEnabled,
   },
   seo: {
     meta: {
-      description: ''
-    }
+      description: '',
+    },
   },
   sitemap: {
-    enabled: seoEnabled
+    enabled: seoEnabled,
   },
   // pwa: {
   //   manifest: {
@@ -68,18 +93,18 @@ export default defineNuxtConfig({
   nitro: {
     compressPublicAssets: true,
     prerender: {
-      routes: ['/', '/login', ...sitemapRoutes]
+      routes: ['/', '/login', ...sitemapRoutes],
       // routes: ['/', '/login', ]
-    }
+    },
   },
   vite: {
     build: {
       terserOptions: {
         compress: {
-          drop_console: true
-        }
-      }
-    }
+          drop_console: true,
+        },
+      },
+    },
   },
 
   typescript: {
@@ -87,7 +112,7 @@ export default defineNuxtConfig({
       compilerOptions: {
         // experimentalDecorators: true,
         // emitDecoratorMetadata: true
-      }
-    }
-  }
+      },
+    },
+  },
 })

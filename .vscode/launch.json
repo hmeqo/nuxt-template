@@ -8,8 +8,8 @@
             "type": "node-terminal",
             "name": "Frontend: dev-admin",
             "request": "launch",
-            "command": "pnpm dev:admin",
-            "cwd": "${workspaceFolder}",
+            "command": "pnpm dev",
+            "cwd": "${workspaceFolder}/apps/admin",
             "internalConsoleOptions": "neverOpen"
         }
     ]

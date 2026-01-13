@@ -4,7 +4,7 @@ withDefaults(
     rounded?: boolean
     embedded?: boolean
   }>(),
-  { rounded: true }
+  { rounded: true },
 )
 
 const isMaximized = ref(false)
@@ -22,14 +22,9 @@ function close() {
 }
 
 if (isTauri) {
-  import('@tauri-apps/api/event').then(({ listen }) => {
-    listen('tauri://resize', () => {
-      import('@tauri-apps/api/window').then(({ getCurrentWindow }) =>
-        getCurrentWindow()
-          .isMaximized()
-          .then((v) => (isMaximized.value = v))
-      )
-    })
+  import('@tauri-apps/api/window').then(({ getCurrentWindow }) => {
+    const appWindow = getCurrentWindow()
+    appWindow.onResized(useDebounceFn(() => appWindow.isMaximized().then((v) => (isMaximized.value = v)), 100))
   })
 }
 </script>

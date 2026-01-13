@@ -7,8 +7,8 @@ export default createConfigForNuxt()
       'error',
       'kebab-case',
       {
-        registeredComponentsOnly: false
-      }
+        registeredComponentsOnly: false,
+      },
     ],
     '@typescript-eslint/no-unused-vars': 'off',
     'vue/require-default-prop': 'off',
@@ -18,13 +18,13 @@ export default createConfigForNuxt()
         html: {
           void: 'always',
           normal: 'always',
-          component: 'always'
+          component: 'always',
         },
         svg: 'always',
-        math: 'always'
-      }
-    ]
+        math: 'always',
+      },
+    ],
   })
   .prepend({
-    ignores: ['packages/backend/lib/sdk']
+    ignores: ['packages/tauri/lib/binding.ts', '**/app/lib/api/{apiDefinitions,createApis,globals.d}.ts'],
   })

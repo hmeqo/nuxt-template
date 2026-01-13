@@ -1,0 +1,5 @@
+@import '@unocss/reset/tailwind.css';
+
+@import './main.css';
+@import './utilities.css';
+@import './transition.css';

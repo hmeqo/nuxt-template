@@ -5,7 +5,7 @@ const stats = [
   { title: 'Total Revenue', value: '$45,231.89', change: '+20.1% from last month', icon: 'i-lucide-dollar-sign' },
   { title: 'Subscriptions', value: '+2350', change: '+180.1% from last month', icon: 'i-lucide-users' },
   { title: 'Sales', value: '+12,234', change: '+19% from last month', icon: 'i-lucide-credit-card' },
-  { title: 'Active Now', value: '+573', change: '+201 since last hour', icon: 'i-lucide-activity' }
+  { title: 'Active Now', value: '+573', change: '+201 since last hour', icon: 'i-lucide-activity' },
 ]
 
 const recentSales = [
@@ -13,12 +13,12 @@ const recentSales = [
   { name: 'Jackson Lee', email: 'jackson.lee@email.com', amount: '+$39.00', initials: 'JL' },
   { name: 'Isabella Nguyen', email: 'isabella.nguyen@email.com', amount: '+$299.00', initials: 'IN' },
   { name: 'William Kim', email: 'will@email.com', amount: '+$99.00', initials: 'WK' },
-  { name: 'Sofia Davis', email: 'sofia.davis@email.com', amount: '+$39.00', initials: 'SD' }
+  { name: 'Sofia Davis', email: 'sofia.davis@email.com', amount: '+$39.00', initials: 'SD' },
 ]
 
 const teamMembers = [
   { name: 'John Doe', email: 'john@example.com', role: 'Owner', initials: 'JD' },
-  { name: 'Jane Smith', email: 'jane@example.com', role: 'Member', initials: 'JS' }
+  { name: 'Jane Smith', email: 'jane@example.com', role: 'Member', initials: 'JS' },
 ]
 
 const cookieSettings = [
@@ -26,20 +26,20 @@ const cookieSettings = [
     id: 'necessary',
     label: 'Strictly Necessary',
     description: 'These cookies are essential in order to use the website and use its features.',
-    defaultChecked: true
+    defaultChecked: true,
   },
   {
     id: 'functional',
     label: 'Functional Cookies',
     description: 'These cookies allow the website to provide personalized functionality.',
-    defaultChecked: false
+    defaultChecked: false,
   },
   {
     id: 'performance',
     label: 'Performance Cookies',
     description: 'These cookies help to improve the performance of the website.',
-    defaultChecked: false
-  }
+    defaultChecked: false,
+  },
 ]
 </script>
 

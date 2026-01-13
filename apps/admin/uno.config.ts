@@ -1,16 +1,16 @@
-import { presetIcons } from '@unocss/preset-icons'
 import shadcnUnocssConfig from '@workspace-hmeqo/shadcn-unocss/config'
 import {
   defineConfig,
   mergeConfigs,
+  presetIcons,
   transformerCompileClass,
   transformerDirectives,
-  transformerVariantGroup
+  transformerVariantGroup,
 } from 'unocss'
 
 export default defineConfig(
   mergeConfigs([
-    shadcnUnocssConfig,
+    shadcnUnocssConfig(),
     {
       presets: [presetIcons()],
       transformers: [transformerVariantGroup(), transformerDirectives(), transformerCompileClass()],
@@ -25,14 +25,14 @@ export default defineConfig(
             'Consolas',
             'Liberation Mono',
             'Courier New',
-            'monospace'
-          ]
-        }
+            'monospace',
+          ],
+        },
       },
       shortcuts: {
         'px-container': 'px-6',
-        'py-container': 'py-12'
-      }
-    }
-  ])
+        'py-container': 'py-12',
+      },
+    },
+  ]),
 )

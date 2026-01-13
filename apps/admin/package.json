@@ -7,6 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "serve": "lingxi-env -f .env --silent -- node .output/server/index.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -15,8 +16,11 @@
     "@workspace-hmeqo/nuxt-infra": "workspace:^",
     "@workspace-hmeqo/shadcn-unocss": "workspace:^",
     "@workspace-hmeqo/unocss": "workspace:^",
-    "reka-ui": "^2.6.1",
+    "@workspace-hmeqo/alova": "workspace:^",
+    "@workspace/apiclient": "workspace:^",
+    "nuxt-csurf": "1.6.5",
+    "reka-ui": "^2.7.0",
     "vee-validate": "^4.15.1",
-    "zod": "^4.1.13"
+    "zod": "^4.3.5"
   }
 }

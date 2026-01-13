@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FormField } from '@/components/ui/form'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
@@ -7,12 +6,12 @@ import * as z from 'zod'
 const formSchema = toTypedSchema(
   z.object({
     email: z.email({ message: '请输入有效的邮箱地址' }),
-    password: z.string({ message: '请输入密码' }).min(6, { message: '密码至少需要6个字符' })
-  })
+    password: z.string({ message: '请输入密码' }).min(6, { message: '密码至少需要6个字符' }),
+  }),
 )
 
 const form = useForm({
-  validationSchema: formSchema
+  validationSchema: formSchema,
 })
 
 const onSubmit = form.handleSubmit((values) => {
@@ -28,7 +27,7 @@ const onSubmit = form.handleSubmit((values) => {
         <UiCardDescription>输入您的邮箱以登录账户</UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <form @submit="onSubmit" class="grid gap-4">
+        <form class="grid gap-4" @submit="onSubmit">
           <UiFormField v-slot="{ componentField }" name="email">
             <UiFormItem>
               <UiFormLabel>邮箱</UiFormLabel>
@@ -38,7 +37,7 @@ const onSubmit = form.handleSubmit((values) => {
               <UiFormMessage />
             </UiFormItem>
           </UiFormField>
-          <FormField v-slot="{ componentField }" name="password">
+          <UiFormField v-slot="{ componentField }" name="password">
             <UiFormItem>
               <div class="flex items-center">
                 <UiFormLabel>密码</UiFormLabel>
@@ -49,7 +48,7 @@ const onSubmit = form.handleSubmit((values) => {
               </UiFormControl>
               <UiFormMessage />
             </UiFormItem>
-          </FormField>
+          </UiFormField>
           <UiButton type="submit" class="w-full">登录</UiButton>
           <UiButton variant="outline" class="w-full">使用 Google 登录</UiButton>
         </form>
