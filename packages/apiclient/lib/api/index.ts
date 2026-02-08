@@ -10,22 +10,22 @@ export const eventSystem = createEventSystem()
 const handlers = createAlovaHandlers(eventSystem.emit)
 
 export const alovaInstance = createAlova({
-  baseURL: '',
+  // baseURL: 'http://localhost:8000',
   statesHook: VueHook,
   requestAdapter: fetchAdapter(),
   beforeRequest(method) {
     Object.assign(method.config.headers, {
-      [useCsrf?.().headerName || 'X-CSRFToken']: useCookie('csrftoken').value,
+      [useCsrf?.().headerName || 'X-Csrftoken']: useCookie('csrftoken').value,
     })
     handlers.beforeRequest(toRequestInfo(method))
   },
   cacheFor: null,
   responded: {
     async onSuccess(response, method) {
-      return handlers.onSuccess(toResponseInfo(response), toRequestInfo(method), getResponseData(response))
+      return handlers.onSuccess(toResponseInfo(response), toRequestInfo(method), await getResponseData(response))
     },
-    onError(error, method) {
-      return handlers.onError(error, toRequestInfo(method), getResponseData(error.response))
+    async onError(error, method) {
+      return handlers.onError(error, toRequestInfo(method), await getResponseData(error.response))
     },
     onComplete(method) {
       return handlers.onComplete(toRequestInfo(method))
@@ -35,7 +35,7 @@ export const alovaInstance = createAlova({
 
 export const $$userConfigMap = withConfigType({})
 
-export const Apis = createApis(alovaInstance, $$userConfigMap)
+const Apis = createApis(alovaInstance, $$userConfigMap)
 
 mountApis(Apis)
 

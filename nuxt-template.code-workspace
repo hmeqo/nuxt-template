@@ -8,6 +8,6 @@
     },
   ],
   "settings": {
-    "typescript.tsdk": "frontend/node_modules/typescript/lib",
+    "typescript.tsdk": "nuxt-template/node_modules/typescript/lib",
   },
 }

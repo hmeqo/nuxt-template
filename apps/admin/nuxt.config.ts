@@ -1,5 +1,5 @@
 const [seoEnabled, sitemapRoutes] = ((): [boolean, string[]] => {
-  const enabled = false
+  const enabled = process.env.ENABLE_SEO === 'true' ? true : false
   return [enabled, enabled ? ['/sitemap.xml'] : []]
 })()
 
@@ -14,14 +14,11 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@workspace-hmeqo/util',
     '@workspace-hmeqo/nuxt-infra',
-    '@workspace-hmeqo/nuxt-web-kit',
-    '@workspace-hmeqo/nuxt-color-mode',
-    // '@workspace-hmeqo/pwa',
     '@workspace-hmeqo/unocss',
     '@workspace-hmeqo/shadcn-unocss',
     '@workspace-hmeqo/alova',
+    // '@workspace-hmeqo/pwa',
     '@workspace/apiclient',
     'nuxt-csurf',
   ],
@@ -31,11 +28,7 @@ export default defineNuxtConfig({
   ],
   imports: {
     dirs: ['~/stores'],
-    imports: [
-      { from: '~/lib/api', name: 'Apis' },
-      { from: '~/lib/api', name: 'useClient' },
-      { from: '~/lib/router', name: 'getLoginUrl' },
-    ],
+    imports: [{ from: '~/lib/router', name: 'getLoginUrl' }],
   },
   app: {
     // layoutTransition: { name: 'fade', mode: 'out-in' },
@@ -48,7 +41,12 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
   },
-  css: ['~/assets/css/index.css'],
+  css: [
+    '~/assets/css/index.css',
+    '~/assets/css/fonts.css',
+    '~/assets/css/utilities.css',
+    '~/assets/css/transition.css',
+  ],
   fonts: {
     families: [{ name: 'Maple Mono', provider: 'none' }],
   },

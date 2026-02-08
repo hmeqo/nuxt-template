@@ -7,10 +7,10 @@ const IsLoggedIn = createPermission(
       if (!authCached)
         Apis.auth
           .me()
-          .then((data) => authState.setState(data))
+          .then((data) => authState.login(data))
           .catch(({ response }) => {
             if (response.status !== 401) return
-            authState.reset()
+            authState.logout()
             if (useRoute().path !== getLoginUrl()) redirectTo(getLoginUrl())
           })
           .finally(() => (authCached = true))
@@ -21,5 +21,5 @@ const IsLoggedIn = createPermission(
 )
 
 export const IsAuthenticated = IsLoggedIn
-// export const IsSuperUser = createPermission(() => IsLoggedIn.verify() && !!useAuthState().getUser()?.is_superuser)
-// export const IsStaff = createPermission(() => IsSuperUser.verify() || !!useAuthState().user?.is_staff)
+// export const IsSuperUser = createPermission(() => IsLoggedIn.verify() && !!useAuthState().user()?.is_superuser)
+// export const IsStaff = createPermission(() => IsSuperUser.verify() || !!useAuthState().user()?.is_staff)

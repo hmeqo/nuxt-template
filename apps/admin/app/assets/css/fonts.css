@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Maple Mono';
-  src: url('/static/fonts/MapleMono-Regular.ttf') format('truetype');
+  src: url('/static/fonts/MapleMono-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

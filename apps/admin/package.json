@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "serve": "lingxi-env -f .env --silent -- node .output/server/index.mjs",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "gen:sdk": "alova gen -f"
   },
   "dependencies": {
     "@vee-validate/zod": "^4.15.1",

@@ -1,5 +1,7 @@
 {
   "name": "@workspace/apiclient",
   "version": "0.1.0",
-  "dependencies": {}
+  "dependencies": {
+    "nuxt-csurf": "^1.6.5"
+  }
 }
