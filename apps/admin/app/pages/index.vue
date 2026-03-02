@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import { Moon, Sun } from 'lucide-vue-next'
+
+definePageMeta({
+  middleware: ['ensure-auth'],
+})
+
 const { darkMode } = useThemeMode()
+const { isAuthenticated } = useAuthPerms()
+const authState = useAuthState()
+const user = computed(() => authState.userChecked())
+
+const { send: logout } = useRequest(() => Apis.auth.logout(), {
+  immediate: false,
+})
+
+async function handleLogout() {
+  await logout()
+  useAuthState().logout()
+  navigateTo(getLoginUrl())
+}
 
 // 统计数据
 const stats = [
@@ -30,7 +49,7 @@ const cookieSettings = [
     id: 'necessary',
     label: 'Strictly Necessary',
     description: 'These cookies are essential in order to use the website and use its features.',
-    defaultChecked: true,
+    enabled: true,
   },
   {
     id: 'functional',
@@ -122,8 +141,39 @@ function getLogLevelColor(level: string) {
             />
           </div>
         </div>
-        <UiSwitch v-model="darkMode" />
-        <UiButton as-child variant="secondary" size="sm">
+        <UiButton variant="ghost" size="icon" @click="darkMode = !darkMode">
+          <Sun v-if="!darkMode" class="h-5 w-5" />
+          <Moon v-else class="h-5 w-5" />
+          <span class="sr-only">切换主题</span>
+        </UiButton>
+        <template v-if="isAuthenticated">
+          <UiDropdownMenu>
+            <UiDropdownMenuTrigger as-child>
+              <UiButton variant="ghost" class="relative h-8 w-8 rounded-full">
+                <UiAvatar class="h-8 w-8">
+                  <UiAvatarFallback>{{ user.username.slice(0, 2).toUpperCase() }}</UiAvatarFallback>
+                </UiAvatar>
+              </UiButton>
+            </UiDropdownMenuTrigger>
+            <UiDropdownMenuContent class="w-56" align="end">
+              <UiDropdownMenuLabel class="font-normal">
+                <div class="flex flex-col space-y-1">
+                  <p class="text-sm font-medium leading-none">{{ user.username }}</p>
+                </div>
+              </UiDropdownMenuLabel>
+              <UiDropdownMenuSeparator />
+              <UiDropdownMenuItem as-child>
+                <NuxtLink to="/profile">个人资料</NuxtLink>
+              </UiDropdownMenuItem>
+              <UiDropdownMenuItem as-child>
+                <NuxtLink to="/settings">设置</NuxtLink>
+              </UiDropdownMenuItem>
+              <UiDropdownMenuSeparator />
+              <UiDropdownMenuItem @click="handleLogout"> 退出登录 </UiDropdownMenuItem>
+            </UiDropdownMenuContent>
+          </UiDropdownMenu>
+        </template>
+        <UiButton v-else as-child variant="secondary" size="sm">
           <NuxtLink to="/login">Sign In</NuxtLink>
         </UiButton>
       </div>
@@ -218,7 +268,7 @@ function getLogLevelColor(level: string) {
                 <span>{{ setting.label }}</span>
                 <span class="font-normal leading-snug text-muted-foreground">{{ setting.description }}</span>
               </UiLabel>
-              <UiSwitch :id="setting.id" :default-checked="setting.defaultChecked" />
+              <UiSwitch :id="setting.id" :default-value="setting.enabled" />
             </div>
           </UiCardContent>
         </UiCard>

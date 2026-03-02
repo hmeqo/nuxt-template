@@ -22,8 +22,12 @@ const defineDefault = <T>(
   return def
 }
 
+export const defaultPerm = (): Types.Perm => "*"
+export const defaultI64 = (): number => 0
+
 export const defaultAuthStateResponse = defineDefault<Types.AuthStateResponse>(
   (fillAll) => ({
+    permissions: [],
     user: defaultUserResponse({ fillAll })
   }),
   () => ({
@@ -131,7 +135,7 @@ export const defaultUserListResponse = defineDefault<Types.UserListResponse>(
 export const defaultUserResponse = defineDefault<Types.UserResponse>(
   (fillAll) => ({
     created_at: '',
-    id: defaultI64({ fillAll }),
+    id: defaultI64(),
     updated_at: '',
     username: ''
   }),

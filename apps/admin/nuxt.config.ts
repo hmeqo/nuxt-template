@@ -20,15 +20,14 @@ export default defineNuxtConfig({
     '@workspace-hmeqo/alova',
     // '@workspace-hmeqo/pwa',
     '@workspace/apiclient',
-    'nuxt-csurf',
   ],
   components: [
     { path: '~/components' },
     // { path: '~/components/ui', prefix: 'ui', pathPrefix: false, extensions: ['ts'] },
   ],
   imports: {
-    dirs: ['~/stores'],
-    imports: [{ from: '~/lib/router', name: 'getLoginUrl' }],
+    // dirs: ['~/stores'],
+    // imports: [{ from: '~/lib/router', name: 'getLoginUrl' }],
   },
   app: {
     // layoutTransition: { name: 'fade', mode: 'out-in' },
@@ -52,8 +51,8 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/**': {
-      ssr: false,
-      prerender: true,
+      // ssr: false,
+      // prerender: true,
     },
   },
 
@@ -91,8 +90,11 @@ export default defineNuxtConfig({
   nitro: {
     compressPublicAssets: true,
     prerender: {
-      routes: ['/', '/login', ...sitemapRoutes],
-      // routes: ['/', '/login', ]
+      routes: [
+        // '/',
+        // '/login',
+        ...sitemapRoutes,
+      ],
     },
   },
   vite: {

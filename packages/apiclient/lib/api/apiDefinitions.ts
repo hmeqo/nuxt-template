@@ -17,11 +17,12 @@
  * **Do not edit the file manually.**
  */
 export default {
-  'general.index': ['GET', '/api'],
+  'chore.index': ['GET', '/api'],
   'auth.login': ['POST', '/api/auth/login'],
   'auth.logout': ['POST', '/api/auth/logout'],
   'auth.me': ['GET', '/api/auth/me'],
-  'general.hello': ['POST', '/api/hello'],
+  'chore.error': ['GET', '/api/error'],
+  'chore.hello': ['POST', '/api/hello'],
   'user.list': ['GET', '/api/users'],
   'user.create': ['POST', '/api/users'],
   'user.get': ['GET', '/api/users/{id}'],

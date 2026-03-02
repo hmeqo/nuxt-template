@@ -19,7 +19,6 @@
     "@workspace-hmeqo/unocss": "workspace:^",
     "@workspace-hmeqo/alova": "workspace:^",
     "@workspace/apiclient": "workspace:^",
-    "nuxt-csurf": "1.6.5",
     "reka-ui": "^2.7.0",
     "vee-validate": "^4.15.1",
     "zod": "^4.3.5"

@@ -11,6 +11,7 @@ export const useAuthState = defineCachedFn(() => {
   watch(state, (v) => {
     cookie.value = v
   })
+
   const actions = {
     state() {
       return state.value
@@ -33,11 +34,12 @@ export const useAuthState = defineCachedFn(() => {
       if (!state.value?.user) throw new Error('User is not logged in')
       return state.value?.user || null
     },
-    isLoggedIn() {
-      return !!state.value?.user
-    },
     isSelf(userId: number) {
       return state.value?.user?.id === userId
+    },
+
+    permissions() {
+      return state.value?.permissions
     },
   }
   return actions

@@ -104,6 +104,16 @@ export interface CreateUserRequest {
 export interface MessageResponse {
   message: string;
 }
+export type Perm =
+  | '*'
+  | 'user:read'
+  | 'user:write'
+  | 'user:delete'
+  | 'user:*'
+  | 'role:read'
+  | 'role:write'
+  | 'role:delete'
+  | 'role:*';
 export interface UserResponse {
   created_at: string;
   id: I64;
@@ -111,7 +121,13 @@ export interface UserResponse {
   username: string;
 }
 export interface AuthStateResponse {
+  permissions: Perm[];
   user: UserResponse;
+}
+export interface ErrorResponse {
+  code: string;
+  detail?: string | null;
+  errors?: null;
 }
 export interface ChangePasswordRequest {
   new_password: string;
@@ -134,7 +150,7 @@ export interface UserListResponse {
 }
 declare global {
   interface Apis {
-    general: {
+    chore: {
       /**
        * ---
        *
@@ -149,9 +165,28 @@ declare global {
        * type Response = unknown
        * ```
        */
-      index<Config extends Alova2MethodConfig<unknown>>(
+      index<Config extends Alova2MethodConfig<unknown>>(config?: Config): Alova2Method<unknown, 'chore.index', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/error
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   code: string
+       *   detail?: string | null
+       *   errors?: null
+       * }
+       * ```
+       */
+      error<Config extends Alova2MethodConfig<ErrorResponse>>(
         config?: Config
-      ): Alova2Method<unknown, 'general.index', Config>;
+      ): Alova2Method<ErrorResponse, 'chore.error', Config>;
       /**
        * ---
        *
@@ -183,7 +218,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<HelloResponse, 'general.hello', Config>;
+      ): Alova2Method<HelloResponse, 'chore.hello', Config>;
     };
     auth: {
       /**
@@ -209,6 +244,19 @@ declare global {
        * ```ts
        * type Response = {
        *   state: {
+       *     // [items] start
+       *     // [items] end
+       *     permissions: (
+       *       | '*'
+       *       | 'user:read'
+       *       | 'user:write'
+       *       | 'user:delete'
+       *       | 'user:*'
+       *       | 'role:read'
+       *       | 'role:write'
+       *       | 'role:delete'
+       *       | 'role:*'
+       *     )[]
        *     user: {
        *       created_at: string
        *       id: number
@@ -257,6 +305,19 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
+       *   // [items] start
+       *   // [items] end
+       *   permissions: (
+       *     | '*'
+       *     | 'user:read'
+       *     | 'user:write'
+       *     | 'user:delete'
+       *     | 'user:*'
+       *     | 'role:read'
+       *     | 'role:write'
+       *     | 'role:delete'
+       *     | 'role:*'
+       *   )[]
        *   user: {
        *     created_at: string
        *     id: number

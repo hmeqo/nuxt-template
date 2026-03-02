@@ -36,6 +36,7 @@ const definePick = <T extends object>(
 
 export const pickAuthStateResponse = definePick<Types.AuthStateResponse>(
   (obj, opts) => ({
+    permissions: obj?.permissions?.map((i: any) => pickPerm(i, opts)),
     user: pickUserResponse(obj?.user, opts)
   }),
   (obj) => ({}),

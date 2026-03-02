@@ -1,4 +1,4 @@
-import { addImports, addImportsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { addImports, addImportsDir, addRouteMiddleware, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { defu } from 'defu'
 
 export default defineNuxtModule({
@@ -38,7 +38,8 @@ export default defineNuxtModule({
     addImportsDir([
       resolver.resolve('./lib/domain/models'),
       resolver.resolve('./lib/domain/choices'),
-      resolver.resolve('./lib/domain/permissions'),
+      resolver.resolve('./composables'),
+      resolver.resolve('./stores'),
       resolver.resolve('./utils'),
     ])
   },
