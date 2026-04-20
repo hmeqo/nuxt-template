@@ -1,145 +1,212 @@
-import { dateString, timeString } from '@workspace-hmeqo/util/lib/date'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/unified-signatures */
 import type Types from './globals'
+import { defu } from 'defu'
 
-const defineDefault = <T>(
-  baseFields: (fillAll: boolean) => T,
-  optionalFields?: () => Partial<T>
-) => {
-  function def(opts?: { fillAll: true; override?: Partial<T> }): Required<T>
-  function def(opts?: { fillAll?: boolean; override?: Partial<T> }): T
-  function def(override?: Partial<T>): T
-  function def(optsOrOverride?: { fillAll?: boolean; override?: Partial<T> }): T {
-    const isOpts = optsOrOverride && 'fillAll' in optsOrOverride
-    const fillAll = isOpts ? (optsOrOverride.fillAll ?? false) : false
-    const override = isOpts ? optsOrOverride.override : optsOrOverride
+export type DeepRequired<T> = T extends object
+  ? { [K in keyof T]-?: T[K] extends (infer U)[] ? DeepRequired<U>[] : T[K] extends object ? DeepRequired<T[K]> : T[K] }
+  : T
 
-    return {
-      ...baseFields(fillAll),
-      ...(fillAll && optionalFields ? optionalFields() : undefined),
-      ...override,
-    } as T
+export type DeepNotNull<T> = T extends object
+  ? { [K in keyof T]-?: T[K] extends (infer U)[] ? DeepNotNull<U>[] : T[K] extends object ? DeepNotNull<T[K]> : NonNullable<T[K]> }
+  : NonNullable<T>
+
+type DefineFullFn<T> = {
+  (): DeepRequired<T>
+  (obj: Partial<DeepRequired<T>>): DeepRequired<T>
+  (opts: { obj?: Partial<DeepNotNull<T>>; notNull: true }): DeepNotNull<T>
+  (opts: { obj?: Partial<DeepRequired<T>>; notNull?: false }): DeepRequired<T>
+}
+
+type DefineInitFn<T> = {
+  <O extends Partial<T> & Record<string, any>>(obj?: O): T
+}
+
+const defineFull = <T>(
+  fields: (notNull: any, obj?: any) => DeepRequired<T>,
+): DefineFullFn<T> => {
+  return (arg?: any): any => {
+    const { notNull, obj } = arg?.notNull === undefined ? { notNull: false, obj: arg } : arg as { notNull: boolean; obj?: any }
+    if (!obj) return fields(notNull)
+    return defu(obj, fields(notNull, obj) as any)
   }
-  return def
+}
+
+const defineInit = <T>(
+  fields: (obj?: any) => T,
+): DefineInitFn<T> => {
+  return <O extends Partial<T> & Record<string, any>>(obj?: O): T => {
+    if (!obj) return fields()
+    return defu(obj, fields(obj) as any) as T
+  }
 }
 
 export const defaultPerm = (): Types.Perm => "*"
+
 export const defaultI64 = (): number => 0
 
-export const defaultAuthStateResponse = defineDefault<Types.AuthStateResponse>(
-  (fillAll) => ({
+export const fullAuthStateResp: DefineFullFn<Types.AuthStateResp> = defineFull<Types.AuthStateResp>(
+  (notNull, obj) => ({
     permissions: [],
-    user: defaultUserResponse({ fillAll })
-  }),
-  () => ({
-
+    user: fullUserResp({ notNull, obj: obj?.user })
   })
 )
 
-export const defaultChangePasswordRequest = defineDefault<Types.ChangePasswordRequest>(
-  (fillAll) => ({
+export const initAuthStateResp: DefineInitFn<Types.AuthStateResp> = defineInit<Types.AuthStateResp>(
+  (obj) => ({
+    permissions: [],
+    user: initUserResp(obj?.user)
+  })
+)
+
+export const fullChangePasswordReq: DefineFullFn<Types.ChangePasswordReq> = defineFull<Types.ChangePasswordReq>(
+  (notNull, obj) => ({
     new_password: '',
     old_password: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultCreateUserRequest = defineDefault<Types.CreateUserRequest>(
-  (fillAll) => ({
+export const initChangePasswordReq: DefineInitFn<Types.ChangePasswordReq> = defineInit<Types.ChangePasswordReq>(
+  (obj) => ({
+    new_password: '',
+    old_password: ''
+  })
+)
+
+export const fullCreateUserReq: DefineFullFn<Types.CreateUserReq> = defineFull<Types.CreateUserReq>(
+  (notNull, obj) => ({
     password: '',
     username: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultErrorResponse = defineDefault<Types.ErrorResponse>(
-  (fillAll) => ({
+export const initCreateUserReq: DefineInitFn<Types.CreateUserReq> = defineInit<Types.CreateUserReq>(
+  (obj) => ({
+    password: '',
+    username: ''
+  })
+)
+
+export const fullErrorResp: DefineFullFn<Types.ErrorResp> = defineFull<Types.ErrorResp>(
+  (notNull, obj) => ({
+    code: '',
+    detail: notNull ? '' : null,
+    errors: {}
+  })
+)
+
+export const initErrorResp: DefineInitFn<Types.ErrorResp> = defineInit<Types.ErrorResp>(
+  (obj) => ({
     code: ''
-  }),
-  () => ({
-    detail: null,
-    errors: undefined
   })
 )
 
-export const defaultHelloRequest = defineDefault<Types.HelloRequest>(
-  (fillAll) => ({
+export const fullHelloReq: DefineFullFn<Types.HelloReq> = defineFull<Types.HelloReq>(
+  (notNull, obj) => ({
     name: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultHelloResponse = defineDefault<Types.HelloResponse>(
-  (fillAll) => ({
+export const initHelloReq: DefineInitFn<Types.HelloReq> = defineInit<Types.HelloReq>(
+  (obj) => ({
+    name: ''
+  })
+)
+
+export const fullHelloResp: DefineFullFn<Types.HelloResp> = defineFull<Types.HelloResp>(
+  (notNull, obj) => ({
     message: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultLoginRequest = defineDefault<Types.LoginRequest>(
-  (fillAll) => ({
+export const initHelloResp: DefineInitFn<Types.HelloResp> = defineInit<Types.HelloResp>(
+  (obj) => ({
+    message: ''
+  })
+)
+
+export const fullLoginReq: DefineFullFn<Types.LoginReq> = defineFull<Types.LoginReq>(
+  (notNull, obj) => ({
     password: '',
     username: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultLoginResponse = defineDefault<Types.LoginResponse>(
-  (fillAll) => ({
-    state: defaultAuthStateResponse({ fillAll })
-  }),
-  () => ({
-
-  })
-)
-
-export const defaultMessageResponse = defineDefault<Types.MessageResponse>(
-  (fillAll) => ({
-    message: ''
-  }),
-  () => ({
-
-  })
-)
-
-export const defaultUpdateUsernameRequest = defineDefault<Types.UpdateUsernameRequest>(
-  (fillAll) => ({
+export const initLoginReq: DefineInitFn<Types.LoginReq> = defineInit<Types.LoginReq>(
+  (obj) => ({
+    password: '',
     username: ''
-  }),
-  () => ({
-
   })
 )
 
-export const defaultUserListResponse = defineDefault<Types.UserListResponse>(
-  (fillAll) => ({
+export const fullLoginResp: DefineFullFn<Types.LoginResp> = defineFull<Types.LoginResp>(
+  (notNull, obj) => ({
+    state: fullAuthStateResp({ notNull, obj: obj?.state })
+  })
+)
+
+export const initLoginResp: DefineInitFn<Types.LoginResp> = defineInit<Types.LoginResp>(
+  (obj) => ({
+    state: initAuthStateResp(obj?.state)
+  })
+)
+
+export const fullMessageResp: DefineFullFn<Types.MessageResp> = defineFull<Types.MessageResp>(
+  (notNull, obj) => ({
+    message: ''
+  })
+)
+
+export const initMessageResp: DefineInitFn<Types.MessageResp> = defineInit<Types.MessageResp>(
+  (obj) => ({
+    message: ''
+  })
+)
+
+export const fullUpdateUsernameReq: DefineFullFn<Types.UpdateUsernameReq> = defineFull<Types.UpdateUsernameReq>(
+  (notNull, obj) => ({
+    username: ''
+  })
+)
+
+export const initUpdateUsernameReq: DefineInitFn<Types.UpdateUsernameReq> = defineInit<Types.UpdateUsernameReq>(
+  (obj) => ({
+    username: ''
+  })
+)
+
+export const fullUserListResp: DefineFullFn<Types.UserListResp> = defineFull<Types.UserListResp>(
+  (notNull, obj) => ({
     page: 0,
     per_page: 0,
     total: 0,
     users: []
-  }),
-  () => ({
-
   })
 )
 
-export const defaultUserResponse = defineDefault<Types.UserResponse>(
-  (fillAll) => ({
+export const initUserListResp: DefineInitFn<Types.UserListResp> = defineInit<Types.UserListResp>(
+  (obj) => ({
+    page: 0,
+    per_page: 0,
+    total: 0,
+    users: []
+  })
+)
+
+export const fullUserResp: DefineFullFn<Types.UserResp> = defineFull<Types.UserResp>(
+  (notNull, obj) => ({
     created_at: '',
     id: defaultI64(),
     updated_at: '',
     username: ''
-  }),
-  () => ({
+  })
+)
 
+export const initUserResp: DefineInitFn<Types.UserResp> = defineInit<Types.UserResp>(
+  (obj) => ({
+    created_at: '',
+    id: defaultI64(),
+    updated_at: '',
+    username: ''
   })
 )

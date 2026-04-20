@@ -2,17 +2,13 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { toast } from '~/components/ui/toast'
-import type { LoginRequest } from '~/types'
 
 definePageMeta({
   middleware: ['login'],
   layout: false,
 })
 
-const form = ref<LoginRequest>({
-  username: '',
-  password: '',
-})
+const form = ref(initLoginReq())
 
 const formSchema = toTypedSchema(
   z.object({
@@ -22,17 +18,14 @@ const formSchema = toTypedSchema(
 )
 
 const { send: login, loading } = useRequest(() => Apis.auth.login({ data: form.value }), { immediate: false })
-
-const onSubmit = async () => {
-  try {
-    const result = await login()
-    useAuthState().login(result.state)
+  .onSuccess(({ data }) => {
+    useAuthState().login(data.state)
     toast({ title: '登录成功' })
     navigateTo(getHomeUrl())
-  } catch (error) {
+  })
+  .onError(() => {
     toast({ title: '登录失败', description: '用户名或密码错误', variant: 'destructive' })
-  }
-}
+  })
 </script>
 
 <template>
@@ -43,7 +36,7 @@ const onSubmit = async () => {
         <UiCardDescription>输入您的用户名和密码以登录账户</UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiForm class="grid gap-4" :validation-schema="formSchema" @submit="onSubmit">
+        <UiForm class="grid gap-4" :validation-schema="formSchema" @submit="login">
           <UiFormField v-slot="{ componentField }" name="username">
             <UiFormItem>
               <UiFormLabel>用户名</UiFormLabel>

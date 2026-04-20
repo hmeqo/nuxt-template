@@ -12,13 +12,10 @@ const user = computed(() => authState.userChecked())
 
 const { send: logout } = useRequest(() => Apis.auth.logout(), {
   immediate: false,
-})
-
-async function handleLogout() {
-  await logout()
+}).onSuccess(() => {
   useAuthState().logout()
   navigateTo(getLoginUrl())
-}
+})
 
 // 统计数据
 const stats = [
@@ -169,7 +166,7 @@ function getLogLevelColor(level: string) {
                 <NuxtLink to="/settings">设置</NuxtLink>
               </UiDropdownMenuItem>
               <UiDropdownMenuSeparator />
-              <UiDropdownMenuItem @click="handleLogout"> 退出登录 </UiDropdownMenuItem>
+              <UiDropdownMenuItem @click="logout"> 退出登录 </UiDropdownMenuItem>
             </UiDropdownMenuContent>
           </UiDropdownMenu>
         </template>

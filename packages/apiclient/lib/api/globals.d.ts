@@ -90,18 +90,18 @@ type Alova2Method<
     : never;
 
 export type I64 = number;
-export interface LoginRequest {
+export interface LoginReq {
   password: string;
   username: string;
 }
-export interface HelloRequest {
+export interface HelloReq {
   name: string;
 }
-export interface CreateUserRequest {
+export interface CreateUserReq {
   password: string;
   username: string;
 }
-export interface MessageResponse {
+export interface MessageResp {
   message: string;
 }
 export type Perm =
@@ -114,39 +114,39 @@ export type Perm =
   | 'role:write'
   | 'role:delete'
   | 'role:*';
-export interface UserResponse {
+export interface UserResp {
   created_at: string;
   id: I64;
   updated_at: string;
   username: string;
 }
-export interface AuthStateResponse {
+export interface AuthStateResp {
   permissions: Perm[];
-  user: UserResponse;
+  user: UserResp;
 }
-export interface ErrorResponse {
+export interface ErrorResp {
   code: string;
   detail?: string | null;
-  errors?: null;
+  errors?: object;
 }
-export interface ChangePasswordRequest {
+export interface ChangePasswordReq {
   new_password: string;
   old_password: string;
 }
-export interface UpdateUsernameRequest {
+export interface UpdateUsernameReq {
   username: string;
 }
-export interface LoginResponse {
-  state: AuthStateResponse;
+export interface LoginResp {
+  state: AuthStateResp;
 }
-export interface HelloResponse {
+export interface HelloResp {
   message: string;
 }
-export interface UserListResponse {
+export interface UserListResp {
   page: number;
   per_page: number;
   total: number;
-  users: UserResponse[];
+  users: UserResp[];
 }
 declare global {
   interface Apis {
@@ -180,13 +180,13 @@ declare global {
        * type Response = {
        *   code: string
        *   detail?: string | null
-       *   errors?: null
+       *   errors?: object
        * }
        * ```
        */
-      error<Config extends Alova2MethodConfig<ErrorResponse>>(
+      error<Config extends Alova2MethodConfig<ErrorResp>>(
         config?: Config
-      ): Alova2Method<ErrorResponse, 'chore.error', Config>;
+      ): Alova2Method<ErrorResp, 'chore.error', Config>;
       /**
        * ---
        *
@@ -213,12 +213,12 @@ declare global {
        * ```
        */
       hello<
-        Config extends Alova2MethodConfig<HelloResponse> & {
-          data: HelloRequest;
+        Config extends Alova2MethodConfig<HelloResp> & {
+          data: HelloReq;
         }
       >(
         config: Config
-      ): Alova2Method<HelloResponse, 'chore.hello', Config>;
+      ): Alova2Method<HelloResp, 'chore.hello', Config>;
     };
     auth: {
       /**
@@ -268,12 +268,12 @@ declare global {
        * ```
        */
       login<
-        Config extends Alova2MethodConfig<LoginResponse> & {
-          data: LoginRequest;
+        Config extends Alova2MethodConfig<LoginResp> & {
+          data: LoginReq;
         }
       >(
         config: Config
-      ): Alova2Method<LoginResponse, 'auth.login', Config>;
+      ): Alova2Method<LoginResp, 'auth.login', Config>;
       /**
        * ---
        *
@@ -290,9 +290,9 @@ declare global {
        * }
        * ```
        */
-      logout<Config extends Alova2MethodConfig<MessageResponse>>(
+      logout<Config extends Alova2MethodConfig<MessageResp>>(
         config?: Config
-      ): Alova2Method<MessageResponse, 'auth.logout', Config>;
+      ): Alova2Method<MessageResp, 'auth.logout', Config>;
       /**
        * ---
        *
@@ -327,9 +327,9 @@ declare global {
        * }
        * ```
        */
-      me<Config extends Alova2MethodConfig<AuthStateResponse>>(
+      me<Config extends Alova2MethodConfig<AuthStateResp>>(
         config?: Config
-      ): Alova2Method<AuthStateResponse, 'auth.me', Config>;
+      ): Alova2Method<AuthStateResp, 'auth.me', Config>;
     };
     user: {
       /**
@@ -371,7 +371,7 @@ declare global {
        * ```
        */
       list<
-        Config extends Alova2MethodConfig<UserListResponse> & {
+        Config extends Alova2MethodConfig<UserListResp> & {
           params: {
             /**
              * Page number
@@ -385,7 +385,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<UserListResponse, 'user.list', Config>;
+      ): Alova2Method<UserListResp, 'user.list', Config>;
       /**
        * ---
        *
@@ -416,12 +416,12 @@ declare global {
        * ```
        */
       create<
-        Config extends Alova2MethodConfig<UserResponse> & {
-          data: CreateUserRequest;
+        Config extends Alova2MethodConfig<UserResp> & {
+          data: CreateUserReq;
         }
       >(
         config: Config
-      ): Alova2Method<UserResponse, 'user.create', Config>;
+      ): Alova2Method<UserResp, 'user.create', Config>;
       /**
        * ---
        *
@@ -451,14 +451,14 @@ declare global {
        * ```
        */
       get<
-        Config extends Alova2MethodConfig<UserResponse> & {
+        Config extends Alova2MethodConfig<UserResp> & {
           pathParams: {
             id: I64;
           };
         }
       >(
         config: Config
-      ): Alova2Method<UserResponse, 'user.get', Config>;
+      ): Alova2Method<UserResp, 'user.get', Config>;
       /**
        * ---
        *
@@ -485,14 +485,14 @@ declare global {
        * ```
        */
       delete_<
-        Config extends Alova2MethodConfig<MessageResponse> & {
+        Config extends Alova2MethodConfig<MessageResp> & {
           pathParams: {
             id: I64;
           };
         }
       >(
         config: Config
-      ): Alova2Method<MessageResponse, 'user.delete_', Config>;
+      ): Alova2Method<MessageResp, 'user.delete_', Config>;
       /**
        * ---
        *
@@ -529,15 +529,15 @@ declare global {
        * ```
        */
       change_password<
-        Config extends Alova2MethodConfig<MessageResponse> & {
+        Config extends Alova2MethodConfig<MessageResp> & {
           pathParams: {
             id: I64;
           };
-          data: ChangePasswordRequest;
+          data: ChangePasswordReq;
         }
       >(
         config: Config
-      ): Alova2Method<MessageResponse, 'user.change_password', Config>;
+      ): Alova2Method<MessageResp, 'user.change_password', Config>;
       /**
        * ---
        *
@@ -576,15 +576,15 @@ declare global {
        * ```
        */
       update_username<
-        Config extends Alova2MethodConfig<UserResponse> & {
+        Config extends Alova2MethodConfig<UserResp> & {
           pathParams: {
             id: I64;
           };
-          data: UpdateUsernameRequest;
+          data: UpdateUsernameReq;
         }
       >(
         config: Config
-      ): Alova2Method<UserResponse, 'user.update_username', Config>;
+      ): Alova2Method<UserResp, 'user.update_username', Config>;
     };
   }
 

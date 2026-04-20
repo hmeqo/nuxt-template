@@ -1,9 +1,9 @@
-import type { AuthStateResponse } from '~/types'
+import type { AuthStateResp } from '~/types'
 
 export const useAuthState = defineCachedFn(() => {
-  const state = useState<AuthStateResponse | null>('auth', () => null)
+  const state = useState<AuthStateResp | null>('auth', () => null)
   const cookie = useCookie('auth', {
-    default: (): AuthStateResponse | null => null,
+    default: (): AuthStateResp | null => null,
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 365,
   })
@@ -20,7 +20,7 @@ export const useAuthState = defineCachedFn(() => {
       if (!state.value) throw new Error('Auth state is not set')
       return state.value
     },
-    login(_state: AuthStateResponse) {
+    login(_state: AuthStateResp) {
       state.value = _state
     },
     logout() {

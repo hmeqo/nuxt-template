@@ -1,9 +1,10 @@
 import { BizError } from '@workspace-hmeqo/alova/lib'
 
 export const useAuthSession = defineCachedFn(() => {
+  const { login, logout } = useAuthState()
+  const { isAuthenticated } = useAuthPerms()
+
   const checkAuth = async () => {
-    const { login, logout } = useAuthState()
-    const { isAuthenticated } = useAuthPerms()
     await Apis.auth
       .me({ meta: { noMessage: ({ response }) => response?.status === 401 } })
       .then((data) => login(data))
@@ -29,8 +30,9 @@ export const useAuthSession = defineCachedFn(() => {
 })
 
 export const useAuthPerms = defineCachedFn(() => {
+  const authState = useAuthState()
   const perms = {
-    isAuthenticated: computed(() => !!useAuthState().user()),
+    isAuthenticated: computed(() => !!authState.user()),
   }
   return perms
 })

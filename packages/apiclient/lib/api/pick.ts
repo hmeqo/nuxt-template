@@ -1,143 +1,138 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as defaults from './defaults'
 import type Types from './globals'
+import { deepFill } from '@workspace-hmeqo/util/lib'
 
-const definePick = <T extends object>(
-  pickFn: (obj: any, opts?: { fillAll?: boolean }) => Partial<T>,
-  pkFn: (obj: any) => Partial<T>,
-  defaultFn: (opts?: { fillAll?: boolean }) => T,
-) => {
-  function pick<O extends Partial<T>>(obj: any, opts?: { fillAll: true; override?: O }): Required<T> & O
-  function pick<O extends Partial<T>>(obj: any, opts?: { fillAll?: boolean; override?: O }): T & O
-  function pick<O extends Partial<T>>(obj: any, opts?: { fillAll?: boolean; override?: O }): T & O {
-    const { fillAll = false, override } = opts ?? {}
-
-    let base
-    if (obj === null || obj === undefined) {
-      base = defaultFn({ fillAll })
-    } else {
-      base = pickFn(obj, opts)
-
-      for (const [k, v] of Object.entries(defaultFn({ fillAll }))) {
-        if (base[k as keyof T] === undefined) base[k as keyof T] = v
-      }
-
-      for (const [k, v] of Object.entries(pkFn(obj))) {
-        base[k as keyof T] = (v as T[keyof T]) ?? base[k as keyof T]
-      }
-    }
-    return {
-      ...base,
-      ...override,
-    } as T & O
-  }
-  return pick
+type DefinePickFn<T> = {
+  (obj: any): T
+  <O extends object>(obj: any, fnOverride: (obj?: any) => O): O
 }
 
-export const pickAuthStateResponse = definePick<Types.AuthStateResponse>(
-  (obj, opts) => ({
-    permissions: obj?.permissions?.map((i: any) => pickPerm(i, opts)),
-    user: pickUserResponse(obj?.user, opts)
+const definePick = <T extends object>(
+  pickFn: (obj: any) => Partial<T>,
+  pkFn: (obj: any) => Partial<T>,
+  fn: (obj?: any) => T,
+): DefinePickFn<T> => {
+  return <O extends object>(obj: any, fnOverride?: (obj?: any) => O): T | O => {
+    const picked: Partial<T> = obj != null ? pickFn(obj) : {}
+
+    if (obj != null) {
+      for (const [k, v] of Object.entries(pkFn(obj))) {
+        if (v !== undefined) picked[k as keyof T] = v as T[keyof T]
+      }
+    }
+
+    const source = (fnOverride ?? fn)(picked);
+    deepFill(picked, source);
+
+    return picked as T | O;
+  }
+}
+
+export const pickAuthStateResp: DefinePickFn<Types.AuthStateResp> = definePick<Types.AuthStateResp>(
+  (obj) => ({
+    permissions: obj?.permissions,
+    user: pickUserResp(obj?.user)
   }),
   (obj) => ({}),
-  defaults.defaultAuthStateResponse
+  defaults.initAuthStateResp
 )
 
-export const pickChangePasswordRequest = definePick<Types.ChangePasswordRequest>(
-  (obj, opts) => ({
+export const pickChangePasswordReq: DefinePickFn<Types.ChangePasswordReq> = definePick<Types.ChangePasswordReq>(
+  (obj) => ({
     new_password: obj?.new_password,
     old_password: obj?.old_password
   }),
   (obj) => ({}),
-  defaults.defaultChangePasswordRequest
+  defaults.initChangePasswordReq
 )
 
-export const pickCreateUserRequest = definePick<Types.CreateUserRequest>(
-  (obj, opts) => ({
+export const pickCreateUserReq: DefinePickFn<Types.CreateUserReq> = definePick<Types.CreateUserReq>(
+  (obj) => ({
     password: obj?.password,
     username: obj?.username
   }),
   (obj) => ({}),
-  defaults.defaultCreateUserRequest
+  defaults.initCreateUserReq
 )
 
-export const pickErrorResponse = definePick<Types.ErrorResponse>(
-  (obj, opts) => ({
+export const pickErrorResp: DefinePickFn<Types.ErrorResp> = definePick<Types.ErrorResp>(
+  (obj) => ({
     code: obj?.code,
     detail: obj?.detail,
     errors: obj?.errors
   }),
   (obj) => ({}),
-  defaults.defaultErrorResponse
+  defaults.initErrorResp
 )
 
-export const pickHelloRequest = definePick<Types.HelloRequest>(
-  (obj, opts) => ({
+export const pickHelloReq: DefinePickFn<Types.HelloReq> = definePick<Types.HelloReq>(
+  (obj) => ({
     name: obj?.name
   }),
   (obj) => ({}),
-  defaults.defaultHelloRequest
+  defaults.initHelloReq
 )
 
-export const pickHelloResponse = definePick<Types.HelloResponse>(
-  (obj, opts) => ({
+export const pickHelloResp: DefinePickFn<Types.HelloResp> = definePick<Types.HelloResp>(
+  (obj) => ({
     message: obj?.message
   }),
   (obj) => ({}),
-  defaults.defaultHelloResponse
+  defaults.initHelloResp
 )
 
-export const pickLoginRequest = definePick<Types.LoginRequest>(
-  (obj, opts) => ({
+export const pickLoginReq: DefinePickFn<Types.LoginReq> = definePick<Types.LoginReq>(
+  (obj) => ({
     password: obj?.password,
     username: obj?.username
   }),
   (obj) => ({}),
-  defaults.defaultLoginRequest
+  defaults.initLoginReq
 )
 
-export const pickLoginResponse = definePick<Types.LoginResponse>(
-  (obj, opts) => ({
-    state: pickAuthStateResponse(obj?.state, opts)
+export const pickLoginResp: DefinePickFn<Types.LoginResp> = definePick<Types.LoginResp>(
+  (obj) => ({
+    state: pickAuthStateResp(obj?.state)
   }),
   (obj) => ({}),
-  defaults.defaultLoginResponse
+  defaults.initLoginResp
 )
 
-export const pickMessageResponse = definePick<Types.MessageResponse>(
-  (obj, opts) => ({
+export const pickMessageResp: DefinePickFn<Types.MessageResp> = definePick<Types.MessageResp>(
+  (obj) => ({
     message: obj?.message
   }),
   (obj) => ({}),
-  defaults.defaultMessageResponse
+  defaults.initMessageResp
 )
 
-export const pickUpdateUsernameRequest = definePick<Types.UpdateUsernameRequest>(
-  (obj, opts) => ({
+export const pickUpdateUsernameReq: DefinePickFn<Types.UpdateUsernameReq> = definePick<Types.UpdateUsernameReq>(
+  (obj) => ({
     username: obj?.username
   }),
   (obj) => ({}),
-  defaults.defaultUpdateUsernameRequest
+  defaults.initUpdateUsernameReq
 )
 
-export const pickUserListResponse = definePick<Types.UserListResponse>(
-  (obj, opts) => ({
+export const pickUserListResp: DefinePickFn<Types.UserListResp> = definePick<Types.UserListResp>(
+  (obj) => ({
     page: obj?.page,
     per_page: obj?.per_page,
     total: obj?.total,
-    users: obj?.users?.map((i: any) => pickUserResponse(i, opts))
+    users: obj?.users?.map((i: any) => pickUserResp(i))
   }),
   (obj) => ({}),
-  defaults.defaultUserListResponse
+  defaults.initUserListResp
 )
 
-export const pickUserResponse = definePick<Types.UserResponse>(
-  (obj, opts) => ({
+export const pickUserResp: DefinePickFn<Types.UserResp> = definePick<Types.UserResp>(
+  (obj) => ({
     created_at: obj?.created_at,
     id: obj?.id,
     updated_at: obj?.updated_at,
     username: obj?.username
   }),
   (obj) => ({}),
-  defaults.defaultUserResponse
+  defaults.initUserResp
 )
