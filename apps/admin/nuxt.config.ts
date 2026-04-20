@@ -7,6 +7,9 @@ const [seoEnabled, sitemapRoutes] = ((): [boolean, string[]] => {
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  experimental: {
+    serverAppConfig: false,
+  },
 
   runtimeConfig: {
     public: {
