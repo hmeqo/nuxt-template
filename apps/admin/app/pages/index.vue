@@ -256,7 +256,7 @@ function getLogLevelColor(level: string) {
               class="flex items-center justify-between space-x-2"
             >
               <UiLabel :for="setting.id" class="flex flex-col space-y-1">
-                <span>{{ setting.label }}</span>
+                <span class="self-start">{{ setting.label }}</span>
                 <span class="font-normal leading-snug text-muted-foreground">{{ setting.description }}</span>
               </UiLabel>
               <UiSwitch :id="setting.id" :default-value="setting.enabled" />
