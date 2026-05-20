@@ -1,4 +1,4 @@
-import { BizError } from '@workspace-hmeqo/alova/lib'
+import { BizError } from '@ws-hmeqo/alova/lib'
 
 export const useAuthSession = defineCachedFn(() => {
   const { login, logout } = useAuthState()
@@ -16,11 +16,14 @@ export const useAuthSession = defineCachedFn(() => {
   }
 
   let authed = false
-  const ensureAuth = () => {
+  const ensureAuth = (opts?: { onAuthed?: () => void; onFailure: () => void }) => {
     if (authed) return
-    checkAuth().then((isAuthenticated) => {
-      authed = isAuthenticated
-    })
+    if (import.meta.client)
+      checkAuth().then((isAuthenticated) => {
+        authed = isAuthenticated
+        if (isAuthenticated) opts?.onAuthed?.()
+        else opts?.onFailure?.()
+      })
   }
 
   return {

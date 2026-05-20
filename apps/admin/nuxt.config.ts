@@ -17,12 +17,12 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@workspace-hmeqo/nuxt-infra',
-    '@workspace-hmeqo/unocss',
-    '@workspace-hmeqo/shadcn-unocss',
-    '@workspace-hmeqo/alova',
-    // '@workspace-hmeqo/pwa',
-    '@workspace/apiclient',
+    '@ws-hmeqo/nuxt-infra',
+    '@ws-hmeqo/tailwindcss',
+    '@ws-hmeqo/shadcn',
+    '@ws-hmeqo/alova',
+    // '@ws-hmeqo/pwa',
+    '@ws/apiclient',
   ],
   components: [
     { path: '~/components' },
@@ -45,6 +45,7 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/index.css',
+    '~/assets/css/tailwind.css',
     '~/assets/css/fonts.css',
     '~/assets/css/utilities.css',
     '~/assets/css/transition.css',
@@ -70,7 +71,7 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: 'https://example.com',
+    // url: 'https://example.com',
     indexable: seoEnabled,
   },
   seo: {

@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/tauri",
+  "name": "@ws/tauri",
   "version": "0.1.0",
   "dependencies": {
     "@tauri-apps/api": "^2.10.1",

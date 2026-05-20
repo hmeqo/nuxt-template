@@ -3,7 +3,7 @@ import { defu } from 'defu'
 
 export default defineNuxtModule({
   meta: {
-    name: '@workspace/apiclient',
+    name: '@ws/apiclient',
   },
 
   moduleDependencies: {
@@ -13,7 +13,7 @@ export default defineNuxtModule({
   hooks: {
     'prepare:types': ({ references }) => {
       references.push({
-        types: '@workspace/apiclient/types',
+        types: '@ws/apiclient/types',
       })
     },
   },

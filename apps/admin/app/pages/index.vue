@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Moon, Sun } from 'lucide-vue-next'
-
 definePageMeta({
   middleware: ['ensure-auth'],
 })
@@ -19,10 +17,10 @@ const { send: logout } = useRequest(() => Apis.auth.logout(), {
 
 // 统计数据
 const stats = [
-  { title: 'Total Revenue', value: '$45,231.89', change: '+20.1% from last month', icon: 'i-lucide-dollar-sign' },
-  { title: 'Subscriptions', value: '+2350', change: '+180.1% from last month', icon: 'i-lucide-users' },
-  { title: 'Sales', value: '+12,234', change: '+19% from last month', icon: 'i-lucide-credit-card' },
-  { title: 'Active Now', value: '+573', change: '+201 since last hour', icon: 'i-lucide-activity' },
+  { title: 'Total Revenue', value: '$45,231.89', change: '+20.1% from last month', icon: 'lucide:dollar-sign' },
+  { title: 'Subscriptions', value: '+2350', change: '+180.1% from last month', icon: 'lucide:users' },
+  { title: 'Sales', value: '+12,234', change: '+19% from last month', icon: 'lucide:credit-card' },
+  { title: 'Active Now', value: '+573', change: '+201 since last hour', icon: 'lucide:activity' },
 ]
 
 // 最近销售
@@ -130,17 +128,13 @@ function getLogLevelColor(level: string) {
       <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <div class="ml-auto flex-1 sm:flex-initial">
           <div class="relative">
-            <div class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground i-lucide-search" />
-            <UiInput
-              type="search"
-              placeholder="Search products..."
-              class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-            />
+            <Icon name="lucide:search" class="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+            <UiInput type="search" placeholder="Search products..." class="pl-8 sm:w-75 md:w-50 lg:w-75" />
           </div>
         </div>
         <UiButton variant="ghost" size="icon" @click="darkMode = !darkMode">
-          <Sun v-if="!darkMode" class="h-5 w-5" />
-          <Moon v-else class="h-5 w-5" />
+          <Icon v-if="!darkMode" name="lucide:sun" class="size-5" />
+          <Icon v-else name="lucide:moon" class="size-5" />
           <span class="sr-only">切换主题</span>
         </UiButton>
         <template v-if="isAuthenticated">
@@ -182,7 +176,7 @@ function getLogLevelColor(level: string) {
         <UiCard v-for="stat in stats" :key="stat.title">
           <UiCardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
             <UiCardTitle class="text-sm font-medium">{{ stat.title }}</UiCardTitle>
-            <div :class="[stat.icon, 'h-4 w-4 text-muted-foreground']" />
+            <Icon :name="stat.icon" class="size-4 text-muted-foreground" />
           </UiCardHeader>
           <UiCardContent>
             <div class="text-2xl font-bold">{{ stat.value }}</div>
@@ -201,7 +195,7 @@ function getLogLevelColor(level: string) {
             </div>
           </UiCardHeader>
           <UiCardContent>
-            <div class="h-[300px] w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
+            <div class="h-75 w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
               Chart Placeholder
             </div>
           </UiCardContent>
@@ -278,13 +272,13 @@ function getLogLevelColor(level: string) {
           <UiCardHeader class="flex flex-row items-center justify-between">
             <div>
               <UiCardTitle class="flex items-center gap-2">
-                <div class="i-lucide-code-2 h-4 w-4" />
+                <Icon name="lucide:code-2" class="size-4" />
                 API Response
               </UiCardTitle>
               <UiCardDescription>Sample JSON response from /api/user</UiCardDescription>
             </div>
             <UiButton variant="ghost" size="icon" @click="copyToClipboard(apiResponse)">
-              <div class="i-lucide-copy h-4 w-4" />
+              <Icon name="lucide:copy" class="size-4" />
             </UiButton>
           </UiCardHeader>
           <UiCardContent>
@@ -298,7 +292,7 @@ function getLogLevelColor(level: string) {
         <UiCard>
           <UiCardHeader>
             <UiCardTitle class="flex items-center gap-2">
-              <div class="i-lucide-terminal h-4 w-4" />
+              <Icon name="lucide:terminal" class="size-4" />
               System Logs
             </UiCardTitle>
             <UiCardDescription>Recent application logs</UiCardDescription>

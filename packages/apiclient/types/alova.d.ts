@@ -1,6 +1,6 @@
-import type { RequestInfo, ResponseInfo } from '@workspace-hmeqo/alova/types'
+import type { RequestInfo, ResponseInfo } from '@ws-hmeqo/alova/types'
 
-declare module '@workspace-hmeqo/alova/types' {
+declare module '@ws-hmeqo/alova/types' {
   export interface AlovaCustomTypeMeta {
     noMessage?: (e: { request: RequestInfo; response?: ResponseInfo }) => boolean
   }

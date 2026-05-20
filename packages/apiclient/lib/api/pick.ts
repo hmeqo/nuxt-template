@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as defaults from './defaults'
 import type Types from './globals'
-import { deepFill } from '@workspace-hmeqo/util/lib'
+import { deepFill } from '@ws-hmeqo/util/lib'
 
 type DefinePickFn<T> = {
   (obj: any): T
@@ -93,6 +93,8 @@ export const pickLoginReq: DefinePickFn<Types.LoginReq> = definePick<Types.Login
 
 export const pickLoginResp: DefinePickFn<Types.LoginResp> = definePick<Types.LoginResp>(
   (obj) => ({
+    access_token: obj?.access_token,
+    refresh_token: obj?.refresh_token,
     state: pickAuthStateResp(obj?.state)
   }),
   (obj) => ({}),
@@ -105,6 +107,23 @@ export const pickMessageResp: DefinePickFn<Types.MessageResp> = definePick<Types
   }),
   (obj) => ({}),
   defaults.initMessageResp
+)
+
+export const pickRefreshReq: DefinePickFn<Types.RefreshReq> = definePick<Types.RefreshReq>(
+  (obj) => ({
+    refresh_token: obj?.refresh_token
+  }),
+  (obj) => ({}),
+  defaults.initRefreshReq
+)
+
+export const pickRefreshResp: DefinePickFn<Types.RefreshResp> = definePick<Types.RefreshResp>(
+  (obj) => ({
+    access_token: obj?.access_token,
+    refresh_token: obj?.refresh_token
+  }),
+  (obj) => ({}),
+  defaults.initRefreshResp
 )
 
 export const pickUpdateUsernameReq: DefinePickFn<Types.UpdateUsernameReq> = definePick<Types.UpdateUsernameReq>(

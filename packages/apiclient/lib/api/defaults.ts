@@ -141,12 +141,16 @@ export const initLoginReq: DefineInitFn<Types.LoginReq> = defineInit<Types.Login
 
 export const fullLoginResp: DefineFullFn<Types.LoginResp> = defineFull<Types.LoginResp>(
   (notNull, obj) => ({
+    access_token: '',
+    refresh_token: '',
     state: fullAuthStateResp({ notNull, obj: obj?.state })
   })
 )
 
 export const initLoginResp: DefineInitFn<Types.LoginResp> = defineInit<Types.LoginResp>(
   (obj) => ({
+    access_token: '',
+    refresh_token: '',
     state: initAuthStateResp(obj?.state)
   })
 )
@@ -160,6 +164,32 @@ export const fullMessageResp: DefineFullFn<Types.MessageResp> = defineFull<Types
 export const initMessageResp: DefineInitFn<Types.MessageResp> = defineInit<Types.MessageResp>(
   (obj) => ({
     message: ''
+  })
+)
+
+export const fullRefreshReq: DefineFullFn<Types.RefreshReq> = defineFull<Types.RefreshReq>(
+  (notNull, obj) => ({
+    refresh_token: ''
+  })
+)
+
+export const initRefreshReq: DefineInitFn<Types.RefreshReq> = defineInit<Types.RefreshReq>(
+  (obj) => ({
+    refresh_token: ''
+  })
+)
+
+export const fullRefreshResp: DefineFullFn<Types.RefreshResp> = defineFull<Types.RefreshResp>(
+  (notNull, obj) => ({
+    access_token: '',
+    refresh_token: ''
+  })
+)
+
+export const initRefreshResp: DefineInitFn<Types.RefreshResp> = defineInit<Types.RefreshResp>(
+  (obj) => ({
+    access_token: '',
+    refresh_token: ''
   })
 )
 

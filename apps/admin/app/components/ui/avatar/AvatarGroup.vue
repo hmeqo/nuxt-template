@@ -9,8 +9,11 @@ const props = defineProps<{
 
 <template>
   <div
-    data-slot="card-footer"
-    :class="cn('bg-muted/50 rounded-b-xl border-t p-4 group-data-[size=sm]/card:p-3 flex items-center', props.class)"
+    data-slot="avatar-group"
+    :class="cn(
+      'group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background',
+      props.class,
+    )"
   >
     <slot />
   </div>

@@ -1,3 +1,3 @@
 export {}
 
-export * from '@workspace/apiclient/lib/api/globals'
+export * from '@ws/apiclient/lib/api/globals'

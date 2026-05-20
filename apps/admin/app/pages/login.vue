@@ -19,7 +19,7 @@ const formSchema = toTypedSchema(
 
 const { send: login, loading } = useRequest(() => Apis.auth.login({ data: form.value }), { immediate: false })
   .onSuccess(({ data }) => {
-    useAuthState().login(data.state)
+    useAuthState().login(data)
     toast({ title: '登录成功' })
     navigateTo(getHomeUrl())
   })

@@ -18,6 +18,11 @@
  */
 export default {
   'chore.index': ['GET', '/api'],
+  'jwtDemo.echo': ['GET', '/api/auth/jwt/echo'],
+  'jwtDemo.login': ['POST', '/api/auth/jwt/login'],
+  'jwtDemo.logout': ['POST', '/api/auth/jwt/logout'],
+  'jwtDemo.me': ['GET', '/api/auth/jwt/me'],
+  'jwtDemo.refresh': ['POST', '/api/auth/jwt/refresh'],
   'auth.login': ['POST', '/api/auth/login'],
   'auth.logout': ['POST', '/api/auth/logout'],
   'auth.me': ['GET', '/api/auth/me'],

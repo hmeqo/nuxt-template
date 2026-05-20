@@ -1,5 +1,5 @@
-import { createAlovaHandlers, createEventSystem } from '@workspace-hmeqo/alova/lib'
-import { getResponseData, toRequestInfo, toResponseInfo } from '@workspace-hmeqo/alova/lib/adapter/fetch'
+import { createAlovaHandlers, createEventSystem } from '@ws-hmeqo/alova/lib'
+import { getResponseData, toRequestInfo, toResponseInfo } from '@ws-hmeqo/alova/lib/adapter/fetch'
 import { createAlova } from 'alova'
 import fetchAdapter from 'alova/fetch'
 import VueHook from 'alova/vue'

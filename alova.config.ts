@@ -1,6 +1,6 @@
 import { defineConfig } from '@alova/wormhole'
-import { defaultsPlugin, pickPlugin } from '@workspace-hmeqo/alova/lib/plugin'
-// import { naiveRulesPlugin } from '@workspace-hmeqo/alova/lib/plugin/naive-rules'
+import { defaultsPlugin, pickPlugin } from '@ws-hmeqo/alova/lib/plugin'
+// import { naiveRulesPlugin } from '@ws-hmeqo/alova/lib/plugin/naive-rules'
 
 const outputDir = 'packages/apiclient/lib/api'
 

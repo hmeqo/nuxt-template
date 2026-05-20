@@ -94,15 +94,15 @@ export interface LoginReq {
   password: string;
   username: string;
 }
+export interface RefreshReq {
+  refresh_token: string;
+}
 export interface HelloReq {
   name: string;
 }
 export interface CreateUserReq {
   password: string;
   username: string;
-}
-export interface MessageResp {
-  message: string;
 }
 export type Perm =
   | '*'
@@ -137,7 +137,13 @@ export interface UpdateUsernameReq {
   username: string;
 }
 export interface LoginResp {
+  access_token: string;
+  refresh_token: string;
   state: AuthStateResp;
+}
+export interface RefreshResp {
+  access_token: string;
+  refresh_token: string;
 }
 export interface HelloResp {
   message: string;
@@ -147,6 +153,9 @@ export interface UserListResp {
   per_page: number;
   total: number;
   users: UserResp[];
+}
+export interface MessageResp {
+  message: string;
 }
 declare global {
   interface Apis {
@@ -220,13 +229,28 @@ declare global {
         config: Config
       ): Alova2Method<HelloResp, 'chore.hello', Config>;
     };
-    auth: {
+    jwtDemo: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/auth/jwt/echo
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = null
+       * ```
+       */
+      echo<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'jwtDemo.echo', Config>;
       /**
        * ---
        *
        * [POST]
        *
-       * **path:** /api/auth/login
+       * **path:** /api/auth/jwt/login
        *
        * ---
        *
@@ -243,6 +267,8 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
+       *   access_token: string
+       *   refresh_token: string
        *   state: {
        *     // [items] start
        *     // [items] end
@@ -273,7 +299,145 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<LoginResp, 'auth.login', Config>;
+      ): Alova2Method<LoginResp, 'jwtDemo.login', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/auth/jwt/logout
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = null
+       * ```
+       */
+      logout<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'jwtDemo.logout', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/auth/jwt/me
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // [items] start
+       *   // [items] end
+       *   permissions: (
+       *     | '*'
+       *     | 'user:read'
+       *     | 'user:write'
+       *     | 'user:delete'
+       *     | 'user:*'
+       *     | 'role:read'
+       *     | 'role:write'
+       *     | 'role:delete'
+       *     | 'role:*'
+       *   )[]
+       *   user: {
+       *     created_at: string
+       *     id: number
+       *     updated_at: string
+       *     username: string
+       *   }
+       * }
+       * ```
+       */
+      me<Config extends Alova2MethodConfig<AuthStateResp>>(
+        config?: Config
+      ): Alova2Method<AuthStateResp, 'jwtDemo.me', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/auth/jwt/refresh
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   refresh_token: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   access_token: string
+       *   refresh_token: string
+       * }
+       * ```
+       */
+      refresh<
+        Config extends Alova2MethodConfig<RefreshResp> & {
+          data: RefreshReq;
+        }
+      >(
+        config: Config
+      ): Alova2Method<RefreshResp, 'jwtDemo.refresh', Config>;
+    };
+    auth: {
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/auth/login
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   password: string
+       *   username: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   // [items] start
+       *   // [items] end
+       *   permissions: (
+       *     | '*'
+       *     | 'user:read'
+       *     | 'user:write'
+       *     | 'user:delete'
+       *     | 'user:*'
+       *     | 'role:read'
+       *     | 'role:write'
+       *     | 'role:delete'
+       *     | 'role:*'
+       *   )[]
+       *   user: {
+       *     created_at: string
+       *     id: number
+       *     updated_at: string
+       *     username: string
+       *   }
+       * }
+       * ```
+       */
+      login<
+        Config extends Alova2MethodConfig<AuthStateResp> & {
+          data: LoginReq;
+        }
+      >(
+        config: Config
+      ): Alova2Method<AuthStateResp, 'auth.login', Config>;
       /**
        * ---
        *
@@ -285,14 +449,10 @@ declare global {
        *
        * **Response**
        * ```ts
-       * type Response = {
-       *   message: string
-       * }
+       * type Response = null
        * ```
        */
-      logout<Config extends Alova2MethodConfig<MessageResp>>(
-        config?: Config
-      ): Alova2Method<MessageResp, 'auth.logout', Config>;
+      logout<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'auth.logout', Config>;
       /**
        * ---
        *

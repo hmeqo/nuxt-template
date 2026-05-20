@@ -1,5 +1,7 @@
 export default defineNuxtRouteMiddleware(() => {
-  useAuthSession().ensureAuth()
-  const { isAuthenticated } = useAuthPerms()
-  return routeAuth([{ auth: [isAuthenticated] }], { fallback: getLoginUrl() })
+  useAuthSession().ensureAuth({
+    onFailure() {
+      navigateTo(getLoginUrl())
+    },
+  })
 })
