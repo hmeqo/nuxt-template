@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
-import { toast } from '~/components/ui/toast'
+import { toast } from '~/components/uix/toast'
 
 definePageMeta({
-  middleware: ['login'],
-  layout: false,
+  auth: 'guest',
 })
 
 const form = ref(initLoginReq())

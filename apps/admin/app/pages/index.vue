@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['ensure-auth'],
+  // auth: 'authenticated',
 })
 
 const { darkMode } = useThemeMode()

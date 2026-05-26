@@ -60,7 +60,7 @@ importers:
         specifier: ^4.15.1
         version: 4.15.1(vue@3.5.32(typescript@5.9.3))
       zod:
-        specifier: ^3.25.76
+        specifier: 3.25.76
         version: 3.25.76
 
   packages/apiclient:
@@ -220,18 +220,15 @@ importers:
 
   packages/hmeqo/shadcn:
     dependencies:
+      '@lucide/vue':
+        specifier: ^1.16.0
+        version: 1.16.0(vue@3.5.32(typescript@5.9.3))
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      lucide-vue-next:
-        specifier: ^0.563.0
-        version: 0.563.0(vue@3.5.32(typescript@5.9.3))
-      radix-vue:
-        specifier: ^1.9.17
-        version: 1.9.17(vue@3.5.32(typescript@5.9.3))
       shadcn-nuxt:
         specifier: ^2.6.2
         version: 2.6.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(magicast@0.5.2)
@@ -1626,6 +1623,11 @@ packages:
     resolution: {integrity: sha512-ehtYzmGgYyLajSybhut+kaP7v0zcUWEtFafa278mGfIQlp91Q7boX+lH/IweI7Z2tykFOSIssVHucaj7kyZSuw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
+
+  '@lucide/vue@1.16.0':
+    resolution: {integrity: sha512-kiHx0fe49DMjQuvNaEOu9Jou6u9FwdqQ8xbZIKlD47sXrOI8g59kIeeQL42NBLI4AvO+UJsbaPX0hEK/4rHSBQ==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   '@mapbox/node-pre-gyp@2.0.3':
     resolution: {integrity: sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg==}
@@ -10880,6 +10882,10 @@ snapshots:
       '@commander-js/extra-typings': 12.1.0(commander@12.1.0)
       commander: 12.1.0
       cross-spawn: 7.0.6
+
+  '@lucide/vue@1.16.0(vue@3.5.32(typescript@5.9.3))':
+    dependencies:
+      vue: 3.5.32(typescript@5.9.3)
 
   '@mapbox/node-pre-gyp@2.0.3':
     dependencies:
