@@ -1,5 +1,5 @@
 import { defineConfig } from '@alova/wormhole'
-import { defaultsPlugin, pickPlugin } from '@ws-hmeqo/alova/lib/plugin'
+import { defaultsPlugin, toPlugin } from '@ws-hmeqo/alova/lib/plugin'
 // import { naiveRulesPlugin } from '@ws-hmeqo/alova/lib/plugin/naive-rules'
 
 const outputDir = 'packages/apiclient/lib/api'
@@ -20,16 +20,17 @@ export default defineConfig({
       // Configure one or more plugins, each generator item can have its own settings
       plugins: [
         {
+          // auth${seperator}login -> login
           afterOpenapiParse(document) {
+            const seperator = '__'
             for (const [, pathItem] of Object.entries(document.paths ?? {})) {
               for (const operation of Object.values(pathItem ?? {})) {
-                // authSEPERATORlogin -> login
                 if (
                   typeof operation === 'object' &&
                   !Array.isArray(operation) &&
-                  (operation.operationId ?? '').includes('SEPARATOR')
+                  (operation.operationId ?? '').includes(seperator)
                 )
-                  operation.operationId = operation.operationId?.split('SEPARATOR')[1]
+                  operation.operationId = operation.operationId?.split(seperator)[1]
               }
             }
           },
@@ -40,7 +41,7 @@ export default defineConfig({
         defaultsPlugin(outputDir, {
           fileFieldNames: ['file', 'image'],
         }),
-        pickPlugin(outputDir, {
+        toPlugin(outputDir, {
           // filter: (name: string) => name.endsWith('Request'),
           pk: [
             { pk: 'id', suffix: '_id', excludes: ['object_id'] },

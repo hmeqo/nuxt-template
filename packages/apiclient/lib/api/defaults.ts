@@ -13,9 +13,9 @@ export type DeepNotNull<T> = T extends object
 
 type DefineFullFn<T> = {
   (): DeepRequired<T>
-  (obj: Partial<DeepRequired<T>>): DeepRequired<T>
-  (opts: { obj?: Partial<DeepNotNull<T>>; notNull: true }): DeepNotNull<T>
-  (opts: { obj?: Partial<DeepRequired<T>>; notNull?: false }): DeepRequired<T>
+  (input: Partial<DeepRequired<T>>): DeepRequired<T>
+  (opts: { input?: Partial<DeepNotNull<T>>; notNull: true }): DeepNotNull<T>
+  (opts: { input?: Partial<DeepRequired<T>>; notNull?: false }): DeepRequired<T>
 }
 
 type DefineInitFn<T> = {
@@ -23,12 +23,12 @@ type DefineInitFn<T> = {
 }
 
 const defineFull = <T>(
-  fields: (notNull: any, obj?: any) => DeepRequired<T>,
+  fields: (notNull: any, input?: any) => DeepRequired<T>,
 ): DefineFullFn<T> => {
   return (arg?: any): any => {
-    const { notNull, obj } = arg?.notNull === undefined ? { notNull: false, obj: arg } : arg as { notNull: boolean; obj?: any }
-    if (!obj) return fields(notNull)
-    return defu(obj, fields(notNull, obj) as any)
+    const { notNull, input } = arg?.notNull === undefined ? { notNull: false, input: arg } : arg as { notNull: boolean; input?: any }
+    if (!input) return fields(notNull)
+    return defu(input, fields(notNull, input) as any)
   }
 }
 
@@ -41,172 +41,172 @@ const defineInit = <T>(
   }
 }
 
-export const defaultPerm = (): Types.Perm => "*"
+export const $defaultPerm = (): Types.Perm => "*"
 
-export const defaultI64 = (): number => 0
+export const $defaultI64 = (): number => 0
 
-export const fullAuthStateResp: DefineFullFn<Types.AuthStateResp> = defineFull<Types.AuthStateResp>(
-  (notNull, obj) => ({
+export const $fullAuthStateResp: DefineFullFn<Types.AuthStateResp> = defineFull<Types.AuthStateResp>(
+  (notNull, input) => ({
     permissions: [],
-    user: fullUserResp({ notNull, obj: obj?.user })
+    user: $fullUserResp({ notNull, input: input?.user })
   })
 )
 
-export const initAuthStateResp: DefineInitFn<Types.AuthStateResp> = defineInit<Types.AuthStateResp>(
-  (obj) => ({
+export const $initAuthStateResp: DefineInitFn<Types.AuthStateResp> = defineInit<Types.AuthStateResp>(
+  (input) => ({
     permissions: [],
-    user: initUserResp(obj?.user)
+    user: $initUserResp(input?.user)
   })
 )
 
-export const fullChangePasswordReq: DefineFullFn<Types.ChangePasswordReq> = defineFull<Types.ChangePasswordReq>(
-  (notNull, obj) => ({
+export const $fullChangePasswordReq: DefineFullFn<Types.ChangePasswordReq> = defineFull<Types.ChangePasswordReq>(
+  (notNull, input) => ({
     new_password: '',
     old_password: ''
   })
 )
 
-export const initChangePasswordReq: DefineInitFn<Types.ChangePasswordReq> = defineInit<Types.ChangePasswordReq>(
-  (obj) => ({
+export const $initChangePasswordReq: DefineInitFn<Types.ChangePasswordReq> = defineInit<Types.ChangePasswordReq>(
+  (input) => ({
     new_password: '',
     old_password: ''
   })
 )
 
-export const fullCreateUserReq: DefineFullFn<Types.CreateUserReq> = defineFull<Types.CreateUserReq>(
-  (notNull, obj) => ({
+export const $fullCreateUserReq: DefineFullFn<Types.CreateUserReq> = defineFull<Types.CreateUserReq>(
+  (notNull, input) => ({
     password: '',
     username: ''
   })
 )
 
-export const initCreateUserReq: DefineInitFn<Types.CreateUserReq> = defineInit<Types.CreateUserReq>(
-  (obj) => ({
+export const $initCreateUserReq: DefineInitFn<Types.CreateUserReq> = defineInit<Types.CreateUserReq>(
+  (input) => ({
     password: '',
     username: ''
   })
 )
 
-export const fullErrorResp: DefineFullFn<Types.ErrorResp> = defineFull<Types.ErrorResp>(
-  (notNull, obj) => ({
+export const $fullErrorResp: DefineFullFn<Types.ErrorResp> = defineFull<Types.ErrorResp>(
+  (notNull, input) => ({
     code: '',
     detail: notNull ? '' : null,
     errors: {}
   })
 )
 
-export const initErrorResp: DefineInitFn<Types.ErrorResp> = defineInit<Types.ErrorResp>(
-  (obj) => ({
+export const $initErrorResp: DefineInitFn<Types.ErrorResp> = defineInit<Types.ErrorResp>(
+  (input) => ({
     code: ''
   })
 )
 
-export const fullHelloReq: DefineFullFn<Types.HelloReq> = defineFull<Types.HelloReq>(
-  (notNull, obj) => ({
+export const $fullHelloReq: DefineFullFn<Types.HelloReq> = defineFull<Types.HelloReq>(
+  (notNull, input) => ({
     name: ''
   })
 )
 
-export const initHelloReq: DefineInitFn<Types.HelloReq> = defineInit<Types.HelloReq>(
-  (obj) => ({
+export const $initHelloReq: DefineInitFn<Types.HelloReq> = defineInit<Types.HelloReq>(
+  (input) => ({
     name: ''
   })
 )
 
-export const fullHelloResp: DefineFullFn<Types.HelloResp> = defineFull<Types.HelloResp>(
-  (notNull, obj) => ({
+export const $fullHelloResp: DefineFullFn<Types.HelloResp> = defineFull<Types.HelloResp>(
+  (notNull, input) => ({
     message: ''
   })
 )
 
-export const initHelloResp: DefineInitFn<Types.HelloResp> = defineInit<Types.HelloResp>(
-  (obj) => ({
+export const $initHelloResp: DefineInitFn<Types.HelloResp> = defineInit<Types.HelloResp>(
+  (input) => ({
     message: ''
   })
 )
 
-export const fullLoginReq: DefineFullFn<Types.LoginReq> = defineFull<Types.LoginReq>(
-  (notNull, obj) => ({
+export const $fullLoginReq: DefineFullFn<Types.LoginReq> = defineFull<Types.LoginReq>(
+  (notNull, input) => ({
     password: '',
     username: ''
   })
 )
 
-export const initLoginReq: DefineInitFn<Types.LoginReq> = defineInit<Types.LoginReq>(
-  (obj) => ({
+export const $initLoginReq: DefineInitFn<Types.LoginReq> = defineInit<Types.LoginReq>(
+  (input) => ({
     password: '',
     username: ''
   })
 )
 
-export const fullLoginResp: DefineFullFn<Types.LoginResp> = defineFull<Types.LoginResp>(
-  (notNull, obj) => ({
+export const $fullLoginResp: DefineFullFn<Types.LoginResp> = defineFull<Types.LoginResp>(
+  (notNull, input) => ({
     access_token: '',
     refresh_token: '',
-    state: fullAuthStateResp({ notNull, obj: obj?.state })
+    state: $fullAuthStateResp({ notNull, input: input?.state })
   })
 )
 
-export const initLoginResp: DefineInitFn<Types.LoginResp> = defineInit<Types.LoginResp>(
-  (obj) => ({
+export const $initLoginResp: DefineInitFn<Types.LoginResp> = defineInit<Types.LoginResp>(
+  (input) => ({
     access_token: '',
     refresh_token: '',
-    state: initAuthStateResp(obj?.state)
+    state: $initAuthStateResp(input?.state)
   })
 )
 
-export const fullMessageResp: DefineFullFn<Types.MessageResp> = defineFull<Types.MessageResp>(
-  (notNull, obj) => ({
+export const $fullMessageResp: DefineFullFn<Types.MessageResp> = defineFull<Types.MessageResp>(
+  (notNull, input) => ({
     message: ''
   })
 )
 
-export const initMessageResp: DefineInitFn<Types.MessageResp> = defineInit<Types.MessageResp>(
-  (obj) => ({
+export const $initMessageResp: DefineInitFn<Types.MessageResp> = defineInit<Types.MessageResp>(
+  (input) => ({
     message: ''
   })
 )
 
-export const fullRefreshReq: DefineFullFn<Types.RefreshReq> = defineFull<Types.RefreshReq>(
-  (notNull, obj) => ({
+export const $fullRefreshReq: DefineFullFn<Types.RefreshReq> = defineFull<Types.RefreshReq>(
+  (notNull, input) => ({
     refresh_token: ''
   })
 )
 
-export const initRefreshReq: DefineInitFn<Types.RefreshReq> = defineInit<Types.RefreshReq>(
-  (obj) => ({
+export const $initRefreshReq: DefineInitFn<Types.RefreshReq> = defineInit<Types.RefreshReq>(
+  (input) => ({
     refresh_token: ''
   })
 )
 
-export const fullRefreshResp: DefineFullFn<Types.RefreshResp> = defineFull<Types.RefreshResp>(
-  (notNull, obj) => ({
+export const $fullRefreshResp: DefineFullFn<Types.RefreshResp> = defineFull<Types.RefreshResp>(
+  (notNull, input) => ({
     access_token: '',
     refresh_token: ''
   })
 )
 
-export const initRefreshResp: DefineInitFn<Types.RefreshResp> = defineInit<Types.RefreshResp>(
-  (obj) => ({
+export const $initRefreshResp: DefineInitFn<Types.RefreshResp> = defineInit<Types.RefreshResp>(
+  (input) => ({
     access_token: '',
     refresh_token: ''
   })
 )
 
-export const fullUpdateUsernameReq: DefineFullFn<Types.UpdateUsernameReq> = defineFull<Types.UpdateUsernameReq>(
-  (notNull, obj) => ({
+export const $fullUpdateUsernameReq: DefineFullFn<Types.UpdateUsernameReq> = defineFull<Types.UpdateUsernameReq>(
+  (notNull, input) => ({
     username: ''
   })
 )
 
-export const initUpdateUsernameReq: DefineInitFn<Types.UpdateUsernameReq> = defineInit<Types.UpdateUsernameReq>(
-  (obj) => ({
+export const $initUpdateUsernameReq: DefineInitFn<Types.UpdateUsernameReq> = defineInit<Types.UpdateUsernameReq>(
+  (input) => ({
     username: ''
   })
 )
 
-export const fullUserListResp: DefineFullFn<Types.UserListResp> = defineFull<Types.UserListResp>(
-  (notNull, obj) => ({
+export const $fullUserListResp: DefineFullFn<Types.UserListResp> = defineFull<Types.UserListResp>(
+  (notNull, input) => ({
     page: 0,
     per_page: 0,
     total: 0,
@@ -214,8 +214,8 @@ export const fullUserListResp: DefineFullFn<Types.UserListResp> = defineFull<Typ
   })
 )
 
-export const initUserListResp: DefineInitFn<Types.UserListResp> = defineInit<Types.UserListResp>(
-  (obj) => ({
+export const $initUserListResp: DefineInitFn<Types.UserListResp> = defineInit<Types.UserListResp>(
+  (input) => ({
     page: 0,
     per_page: 0,
     total: 0,
@@ -223,19 +223,19 @@ export const initUserListResp: DefineInitFn<Types.UserListResp> = defineInit<Typ
   })
 )
 
-export const fullUserResp: DefineFullFn<Types.UserResp> = defineFull<Types.UserResp>(
-  (notNull, obj) => ({
+export const $fullUserResp: DefineFullFn<Types.UserResp> = defineFull<Types.UserResp>(
+  (notNull, input) => ({
     created_at: '',
-    id: defaultI64(),
+    id: $defaultI64(),
     updated_at: '',
     username: ''
   })
 )
 
-export const initUserResp: DefineInitFn<Types.UserResp> = defineInit<Types.UserResp>(
-  (obj) => ({
+export const $initUserResp: DefineInitFn<Types.UserResp> = defineInit<Types.UserResp>(
+  (input) => ({
     created_at: '',
-    id: defaultI64(),
+    id: $defaultI64(),
     updated_at: '',
     username: ''
   })

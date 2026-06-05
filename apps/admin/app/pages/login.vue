@@ -7,7 +7,7 @@ definePageMeta({
   auth: 'guest',
 })
 
-const form = ref(initLoginReq())
+const form = ref($initLoginReq())
 
 const formSchema = toTypedSchema(
   z.object({
