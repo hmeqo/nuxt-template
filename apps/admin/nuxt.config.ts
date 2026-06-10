@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     '@ws-hmeqo/shadcn',
     '@ws-hmeqo/alova',
     // '@ws-hmeqo/pwa',
-    '@ws/apiclient',
+    '@ws/apisdk',
   ],
   components: [
     { path: '~/components' },

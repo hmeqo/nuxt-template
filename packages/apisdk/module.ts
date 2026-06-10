@@ -3,7 +3,7 @@ import { defu } from 'defu'
 
 export default defineNuxtModule({
   meta: {
-    name: '@ws/apiclient',
+    name: '@ws/apisdk',
   },
 
   moduleDependencies: {
@@ -13,7 +13,7 @@ export default defineNuxtModule({
   hooks: {
     'prepare:types': ({ references }) => {
       references.push({
-        types: '@ws/apiclient/types',
+        types: '@ws/apisdk/types',
       })
     },
   },
@@ -36,8 +36,6 @@ export default defineNuxtModule({
     ])
 
     addImportsDir([
-      resolver.resolve('./lib/domain/models'),
-      resolver.resolve('./lib/domain/choices'),
       resolver.resolve('./composables'),
       resolver.resolve('./stores'),
       resolver.resolve('./utils'),

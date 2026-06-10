@@ -15,11 +15,10 @@
     "@iconify-json/lucide": "^1.2.108",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.3.0",
-    "@ws-hmeqo/alova": "workspace:^",
     "@ws-hmeqo/nuxt-infra": "workspace:^",
     "@ws-hmeqo/shadcn": "workspace:^",
     "@ws-hmeqo/tailwindcss": "workspace:^",
-    "@ws/apiclient": "workspace:^",
+    "@ws/apisdk": "workspace:^",
     "reka-ui": "^2.9.7",
     "vee-validate": "^4.15.1",
     "zod": "3.25.76"

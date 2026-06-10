@@ -1,0 +1,14 @@
+{
+  "name": "@ws/apisdk",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./module.ts",
+    "./lib": "./lib/api/index.ts",
+    "./types": "./types/index.d.ts",
+    "./types/*": "./types/*.d.ts"
+  },
+  "dependencies": {
+    "@ws-hmeqo/alova": "workspace:^",
+    "nuxt-csurf": "^1.6.5"
+  }
+}

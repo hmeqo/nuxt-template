@@ -1,4 +1,4 @@
-import type { AuthStateResp } from '~/types'
+import type { AuthStateResp } from '@ws/apisdk/types'
 
 export const useAuthState = defineCachedFn(() => {
   const state = useState<AuthStateResp | null>('auth', () => null)
@@ -20,8 +20,8 @@ export const useAuthState = defineCachedFn(() => {
       if (!state.value) throw new Error('Auth state is not set')
       return state.value
     },
-    login(_state: AuthStateResp) {
-      state.value = _state
+    login(s: AuthStateResp) {
+      state.value = s
     },
     logout() {
       state.value = null
