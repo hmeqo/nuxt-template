@@ -6,10 +6,10 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "Frontend: admin",
+            "name": "Frontend: main",
             "request": "launch",
             "command": "pnpm dev",
-            "cwd": "${workspaceFolder}/apps/admin",
+            "cwd": "${workspaceFolder}/apps/main",
             "internalConsoleOptions": "neverOpen"
         }
     ]

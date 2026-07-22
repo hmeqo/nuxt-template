@@ -6,8 +6,15 @@
     {
       "path": "./apps/admin",
     },
+    {
+      "path": "./apps/main",
+    },
+    {
+      "path": "./src-tauri",
+    },
   ],
   "settings": {
-    "typescript.tsdk": "nuxt-template/node_modules/typescript/lib",
+    "css.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore",
   },
 }

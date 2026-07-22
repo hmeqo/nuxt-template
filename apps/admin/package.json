@@ -12,7 +12,7 @@
     "gen:sdk": "alova gen -f"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.108",
+    "@lucide/vue": "^1.16.0",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.3.0",
     "@ws-hmeqo/nuxt-infra": "workspace:^",

@@ -5,9 +5,9 @@
 
 
 export const commands = {
-async jsonrpcAddr() : Promise<Result<string, string>> {
+async httpUrl() : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("jsonrpc_addr") };
+    return { status: "ok", data: await TAURI_INVOKE("http_url") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
