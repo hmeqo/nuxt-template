@@ -6,7 +6,7 @@
 
 @import 'shadcn-vue/tailwind.css';
 
-@source "../../../../../packages/tauri";
+@source "../../../../../packages/**/*.{vue,ts}";
 
 @plugin "@iconify/tailwind4";
 

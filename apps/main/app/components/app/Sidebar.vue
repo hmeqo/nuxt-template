@@ -12,7 +12,7 @@ const user = computed(() => authState.user())
 <template>
   <aside
     class="relative flex flex-col border-r bg-sidebar overflow-hidden transition-all duration-200 select-none"
-    :class="collapsed ? 'w-13' : 'w-56'"
+    :class="collapsed ? 'w-[53px]' : 'w-56'"
   >
     <AppSidebarHeader :collapsed="collapsed" :name="tauriApp.name ?? 'App'" />
     <AppSidebarNav :collapsed="collapsed" :items="navItems" />

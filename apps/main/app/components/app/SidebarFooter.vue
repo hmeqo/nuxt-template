@@ -20,7 +20,7 @@ const emit = defineEmits<{
       class="flex h-9 w-full items-center justify-start px-2 rounded-lg text-sm transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
       @click="emit('toggleTheme')"
     >
-      <component :is="darkMode ? Sun : Moon" class="size-4.5 shrink-0" />
+      <component :is="darkMode ? Sun : Moon" class="size-5 shrink-0" />
       <Transition name="fade">
         <span v-if="!collapsed" class="ml-3 truncate">{{ darkMode ? 'Light' : 'Dark' }}</span>
       </Transition>
@@ -31,7 +31,7 @@ const emit = defineEmits<{
       class="flex h-9 w-full items-center justify-start px-2 rounded-lg text-sm text-sidebar-foreground/70"
     >
       <div
-        class="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-sidebar-primary/20 text-sidebar-foreground text-[10px] font-medium"
+        class="flex size-5 shrink-0 items-center justify-center rounded-full bg-sidebar-primary/20 text-sidebar-foreground text-[10px] font-medium"
       >
         {{ username?.slice(0, 2).toUpperCase() ?? 'U' }}
       </div>
@@ -44,7 +44,7 @@ const emit = defineEmits<{
       class="flex h-9 w-full items-center justify-start px-2 rounded-lg text-sm transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
       @click="emit('toggleCollapse')"
     >
-      <component :is="collapsed ? PanelRight : PanelLeft" class="size-4.5 shrink-0" />
+      <component :is="collapsed ? PanelRight : PanelLeft" class="size-5 shrink-0" />
       <Transition name="fade">
         <span v-if="!collapsed" class="ml-3 truncate">Collapse</span>
       </Transition>
