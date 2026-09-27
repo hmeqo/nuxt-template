@@ -31,11 +31,11 @@ const maxVal = Math.max(...chartData)
     <AppPageHeader title="Dashboard" description="Your business overview at a glance.">
       <template #actions>
         <UiButton variant="outline" size="sm">
-          <Download class="size-4 mr-2" />
+          <Download class="size-4" />
           Export
         </UiButton>
         <UiButton size="sm">
-          <Plus class="size-4 mr-2" />
+          <Plus class="size-4" />
           New Report
         </UiButton>
       </template>

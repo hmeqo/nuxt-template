@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/unified-signatures */
 import type Types from './globals'
-import { defu } from 'defu'
+import defu from 'defu'
 
 export type DeepRequired<T> = T extends object
   ? { [K in keyof T]-?: T[K] extends (infer U)[] ? DeepRequired<U>[] : T[K] extends object ? DeepRequired<T[K]> : T[K] }
@@ -41,9 +41,11 @@ const defineInit = <T>(
   }
 }
 
+export const $defaultErrorCode = (): Types.ErrorCode => "input.invalid_fields"
+
 export const $defaultPerm = (): Types.Perm => "*"
 
-export const $defaultI64 = (): number => 0
+export const $defaultUserId = (): number => 0
 
 export const $fullAuthStateResp: DefineFullFn<Types.AuthStateResp> = defineFull<Types.AuthStateResp>(
   (notNull, input) => ({
@@ -87,41 +89,65 @@ export const $initCreateUserReq: DefineInitFn<Types.CreateUserReq> = defineInit<
   })
 )
 
+export const $fullEcho: DefineFullFn<Types.Echo> = defineFull<Types.Echo>(
+  (notNull, input) => ({
+    message: ''
+  })
+)
+
+export const $initEcho: DefineInitFn<Types.Echo> = defineInit<Types.Echo>(
+  (input) => ({
+    message: ''
+  })
+)
+
 export const $fullErrorResp: DefineFullFn<Types.ErrorResp> = defineFull<Types.ErrorResp>(
   (notNull, input) => ({
-    code: '',
-    detail: notNull ? '' : null,
-    errors: {}
+    code: $defaultErrorCode(),
+    errors: {},
+    message: ''
   })
 )
 
 export const $initErrorResp: DefineInitFn<Types.ErrorResp> = defineInit<Types.ErrorResp>(
   (input) => ({
-    code: ''
-  })
-)
-
-export const $fullHelloReq: DefineFullFn<Types.HelloReq> = defineFull<Types.HelloReq>(
-  (notNull, input) => ({
-    name: ''
-  })
-)
-
-export const $initHelloReq: DefineInitFn<Types.HelloReq> = defineInit<Types.HelloReq>(
-  (input) => ({
-    name: ''
-  })
-)
-
-export const $fullHelloResp: DefineFullFn<Types.HelloResp> = defineFull<Types.HelloResp>(
-  (notNull, input) => ({
     message: ''
   })
 )
 
-export const $initHelloResp: DefineInitFn<Types.HelloResp> = defineInit<Types.HelloResp>(
+export const $fullFileResp: DefineFullFn<Types.FileResp> = defineFull<Types.FileResp>(
+  (notNull, input) => ({
+    mime_type: '',
+    name: '',
+    original_name: '',
+    size: 0,
+    url: ''
+  })
+)
+
+export const $initFileResp: DefineInitFn<Types.FileResp> = defineInit<Types.FileResp>(
   (input) => ({
-    message: ''
+    mime_type: '',
+    name: '',
+    original_name: '',
+    size: 0,
+    url: ''
+  })
+)
+
+export const $fullJwtEchoResp: DefineFullFn<Types.JwtEchoResp> = defineFull<Types.JwtEchoResp>(
+  (notNull, input) => ({
+    message: '',
+    user_id: $defaultUserId(),
+    username: ''
+  })
+)
+
+export const $initJwtEchoResp: DefineInitFn<Types.JwtEchoResp> = defineInit<Types.JwtEchoResp>(
+  (input) => ({
+    message: '',
+    user_id: $defaultUserId(),
+    username: ''
   })
 )
 
@@ -167,6 +193,18 @@ export const $initMessageResp: DefineInitFn<Types.MessageResp> = defineInit<Type
   })
 )
 
+export const $fullNoParams: DefineFullFn<Types.NoParams> = defineFull<Types.NoParams>(
+  (notNull, input) => ({
+
+  })
+)
+
+export const $initNoParams: DefineInitFn<Types.NoParams> = defineInit<Types.NoParams>(
+  (input) => ({
+
+  })
+)
+
 export const $fullRefreshReq: DefineFullFn<Types.RefreshReq> = defineFull<Types.RefreshReq>(
   (notNull, input) => ({
     refresh_token: ''
@@ -193,6 +231,18 @@ export const $initRefreshResp: DefineInitFn<Types.RefreshResp> = defineInit<Type
   })
 )
 
+export const $fullSessionRenewResp: DefineFullFn<Types.SessionRenewResp> = defineFull<Types.SessionRenewResp>(
+  (notNull, input) => ({
+    expires_at: new Date().toISOString()
+  })
+)
+
+export const $initSessionRenewResp: DefineInitFn<Types.SessionRenewResp> = defineInit<Types.SessionRenewResp>(
+  (input) => ({
+    expires_at: new Date().toISOString()
+  })
+)
+
 export const $fullUpdateUsernameReq: DefineFullFn<Types.UpdateUsernameReq> = defineFull<Types.UpdateUsernameReq>(
   (notNull, input) => ({
     username: ''
@@ -202,6 +252,34 @@ export const $fullUpdateUsernameReq: DefineFullFn<Types.UpdateUsernameReq> = def
 export const $initUpdateUsernameReq: DefineInitFn<Types.UpdateUsernameReq> = defineInit<Types.UpdateUsernameReq>(
   (input) => ({
     username: ''
+  })
+)
+
+export const $fullUploadForm: DefineFullFn<Types.UploadForm> = defineFull<Types.UploadForm>(
+  (notNull, input) => ({
+    file: $fullUploadedFile({ notNull, input: input?.file })
+  })
+)
+
+export const $initUploadForm: DefineInitFn<Types.UploadForm> = defineInit<Types.UploadForm>(
+  (input) => ({
+    file: $initUploadedFile(input?.file)
+  })
+)
+
+export const $fullUploadedFile: DefineFullFn<Types.UploadedFile> = defineFull<Types.UploadedFile>(
+  (notNull, input) => ({
+    data: new Blob([]),
+    mime_type: '',
+    name: ''
+  })
+)
+
+export const $initUploadedFile: DefineInitFn<Types.UploadedFile> = defineInit<Types.UploadedFile>(
+  (input) => ({
+    data: new Blob([]),
+    mime_type: '',
+    name: ''
   })
 )
 
@@ -225,18 +303,18 @@ export const $initUserListResp: DefineInitFn<Types.UserListResp> = defineInit<Ty
 
 export const $fullUserResp: DefineFullFn<Types.UserResp> = defineFull<Types.UserResp>(
   (notNull, input) => ({
-    created_at: '',
-    id: $defaultI64(),
-    updated_at: '',
+    created_at: new Date().toISOString(),
+    id: $defaultUserId(),
+    updated_at: new Date().toISOString(),
     username: ''
   })
 )
 
 export const $initUserResp: DefineInitFn<Types.UserResp> = defineInit<Types.UserResp>(
   (input) => ({
-    created_at: '',
-    id: $defaultI64(),
-    updated_at: '',
+    created_at: new Date().toISOString(),
+    id: $defaultUserId(),
+    updated_at: new Date().toISOString(),
     username: ''
   })
 )

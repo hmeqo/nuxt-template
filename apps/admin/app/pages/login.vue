@@ -4,7 +4,7 @@ import * as z from 'zod'
 import { toast } from '~/components/uix/toast'
 
 definePageMeta({
-  auth: 'guest',
+  auth: 'anonymous',
 })
 
 const form = ref($initLoginReq())

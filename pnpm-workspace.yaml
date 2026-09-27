@@ -1,7 +1,7 @@
 packages:
   - apps/*
   - packages/*
-  - packages/hmeqo/*
+  - packages/remqo/*
 allowBuilds:
   "@parcel/watcher": true
   "@varlet/nuxt": true

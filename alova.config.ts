@@ -1,8 +1,8 @@
 import { defineConfig } from '@alova/wormhole'
-import { defaultsPlugin, toPlugin } from '@ws-hmeqo/alova/plugin'
-// import { naiveRulesPlugin } from '@ws-hmeqo/alova/plugin/naive-rules'
+import { defaultsPlugin, toPlugin } from '@remqo/alova/plugin'
+// import { naiveRulesPlugin } from '@remqo/alova/plugin/naive-rules'
 
-const outputDir = 'packages/apiclient/lib/api'
+const outputDir = 'packages/apisdk/lib/api'
 
 // For more config detailed visit:
 // https://alova.js.org/tutorial/getting-started/extension-integration
@@ -17,20 +17,18 @@ export default defineConfig({
        */
       input: 'http://localhost:8000/api-docs/openapi.json',
 
-      // Configure one or more plugins, each generator item can have its own settings
       plugins: [
         {
-          // auth${seperator}login -> login
+          // auth__login -> login (suffix after the first '__')
           afterOpenapiParse(document) {
-            const seperator = '__'
-            for (const [, pathItem] of Object.entries(document.paths ?? {})) {
+            const separator = '__'
+            for (const pathItem of Object.values(document.paths ?? {})) {
               for (const operation of Object.values(pathItem ?? {})) {
-                if (
-                  typeof operation === 'object' &&
-                  !Array.isArray(operation) &&
-                  (operation.operationId ?? '').includes(seperator)
-                )
-                  operation.operationId = operation.operationId?.split(seperator)[1]
+                if (typeof operation !== 'object' || Array.isArray(operation)) continue
+                const id = operation?.operationId
+                if (!id) continue
+                const at = id.indexOf(separator)
+                if (at !== -1) operation.operationId = id.slice(at + separator.length)
               }
             }
           },

@@ -8,7 +8,7 @@
     "./types/*": "./types/*.d.ts"
   },
   "dependencies": {
-    "@ws-hmeqo/alova": "workspace:^",
-    "nuxt-csurf": "^1.6.5"
+    "@remqo/alova": "workspace:^",
+    "nuxt-csurf": "^1.6.6"
   }
 }

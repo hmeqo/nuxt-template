@@ -8,9 +8,6 @@ defineProps<{
   items: Array<{ label: string; icon: string; to: string }>
 }>()
 
-const activeStyle = 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-const inactiveStyle = 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
-
 function isActive(item: { to: string }): boolean {
   if (item.to === '/') return route.path === '/'
   return route.path.startsWith(item.to)
@@ -19,17 +16,14 @@ function isActive(item: { to: string }): boolean {
 
 <template>
   <nav class="flex-1 space-y-0.5 p-2">
-    <NuxtLink
+    <AppSidebarItem
       v-for="item in items"
       :key="item.to"
       :to="item.to"
-      class="flex items-center justify-start p-2 rounded-lg text-sm transition-colors"
-      :class="isActive(item) ? activeStyle : inactiveStyle"
-    >
-      <component :is="iconMap[item.icon]" class="size-5 shrink-0" />
-      <Transition name="fade">
-        <span v-if="!collapsed" class="ml-3 truncate">{{ item.label }}</span>
-      </Transition>
-    </NuxtLink>
+      :label="item.label"
+      :icon="iconMap[item.icon]"
+      :collapsed="collapsed"
+      :active="isActive(item)"
+    />
   </nav>
 </template>

@@ -27,12 +27,12 @@ const iconComponent = computed(() => {
       <div class="flex items-center gap-2 pt-2">
         <NuxtLink to="/">
           <UiButton variant="outline" size="sm">
-            <Home class="size-4 mr-1.5" />
+            <Home class="size-4" />
             Home
           </UiButton>
         </NuxtLink>
         <UiButton variant="ghost" size="sm" @click="clearError({ redirect: '/' })">
-          <RotateCcw class="size-4 mr-1.5" />
+          <RotateCcw class="size-4" />
           Retry
         </UiButton>
       </div>

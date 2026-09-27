@@ -1,4 +1,4 @@
-import { BizError } from '@ws-hmeqo/alova/lib'
+import { BizError } from '@remqo/alova/lib'
 
 export default defineNuxtPlugin(() => {
   const authState = useAuthState()
@@ -22,7 +22,7 @@ export default defineNuxtPlugin(() => {
       }
     },
     getPermissions() {
-      return authState.permissions() ?? []
+      return authState.permissions()
     },
     checkPermission(permissions, required) {
       const reqs = Array.isArray(required) ? required : [required]

@@ -21,8 +21,7 @@ export default defineNuxtModule({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // Pass module options to runtimeConfig object
-    // @ts-expect-error unknown type
+    // @ts-expect-error
     nuxt.options.csurf = defu(nuxt.options.csurf, {
       https: false,
       cookieKey: 'csrftoken',

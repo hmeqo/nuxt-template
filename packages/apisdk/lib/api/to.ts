@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as defaults from './defaults'
 import type Types from './globals'
-import { deepFill } from '@ws-hmeqo/util/lib'
+import { deepFill } from '@remqo/util/lib'
 
 type DefineToFn<T> = {
   (obj: any): T
@@ -56,30 +56,44 @@ export const $toCreateUserReq: DefineToFn<Types.CreateUserReq> = defineTo<Types.
   defaults.$initCreateUserReq
 )
 
+export const $toEcho: DefineToFn<Types.Echo> = defineTo<Types.Echo>(
+  (obj) => ({
+    message: obj?.message
+  }),
+  (obj) => ({}),
+  defaults.$initEcho
+)
+
 export const $toErrorResp: DefineToFn<Types.ErrorResp> = defineTo<Types.ErrorResp>(
   (obj) => ({
     code: obj?.code,
-    detail: obj?.detail,
-    errors: obj?.errors
+    errors: obj?.errors,
+    message: obj?.message
   }),
   (obj) => ({}),
   defaults.$initErrorResp
 )
 
-export const $toHelloReq: DefineToFn<Types.HelloReq> = defineTo<Types.HelloReq>(
+export const $toFileResp: DefineToFn<Types.FileResp> = defineTo<Types.FileResp>(
   (obj) => ({
-    name: obj?.name
+    mime_type: obj?.mime_type,
+    name: obj?.name,
+    original_name: obj?.original_name,
+    size: obj?.size,
+    url: obj?.url
   }),
   (obj) => ({}),
-  defaults.$initHelloReq
+  defaults.$initFileResp
 )
 
-export const $toHelloResp: DefineToFn<Types.HelloResp> = defineTo<Types.HelloResp>(
+export const $toJwtEchoResp: DefineToFn<Types.JwtEchoResp> = defineTo<Types.JwtEchoResp>(
   (obj) => ({
-    message: obj?.message
+    message: obj?.message,
+    user_id: obj?.user_id,
+    username: obj?.username
   }),
-  (obj) => ({}),
-  defaults.$initHelloResp
+  (obj) => ({ user_id: obj?.user?.id }),
+  defaults.$initJwtEchoResp
 )
 
 export const $toLoginReq: DefineToFn<Types.LoginReq> = defineTo<Types.LoginReq>(
@@ -126,12 +140,38 @@ export const $toRefreshResp: DefineToFn<Types.RefreshResp> = defineTo<Types.Refr
   defaults.$initRefreshResp
 )
 
+export const $toSessionRenewResp: DefineToFn<Types.SessionRenewResp> = defineTo<Types.SessionRenewResp>(
+  (obj) => ({
+    expires_at: obj?.expires_at
+  }),
+  (obj) => ({}),
+  defaults.$initSessionRenewResp
+)
+
 export const $toUpdateUsernameReq: DefineToFn<Types.UpdateUsernameReq> = defineTo<Types.UpdateUsernameReq>(
   (obj) => ({
     username: obj?.username
   }),
   (obj) => ({}),
   defaults.$initUpdateUsernameReq
+)
+
+export const $toUploadForm: DefineToFn<Types.UploadForm> = defineTo<Types.UploadForm>(
+  (obj) => ({
+    file: $toUploadedFile(obj?.file)
+  }),
+  (obj) => ({}),
+  defaults.$initUploadForm
+)
+
+export const $toUploadedFile: DefineToFn<Types.UploadedFile> = defineTo<Types.UploadedFile>(
+  (obj) => ({
+    data: obj?.data,
+    mime_type: obj?.mime_type,
+    name: obj?.name
+  }),
+  (obj) => ({}),
+  defaults.$initUploadedFile
 )
 
 export const $toUserListResp: DefineToFn<Types.UserListResp> = defineTo<Types.UserListResp>(

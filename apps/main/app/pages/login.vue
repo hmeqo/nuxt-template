@@ -61,7 +61,7 @@ const { send: login, loading } = useRequest(() => Apis.auth.login({ data: form.v
           </UiFormItem>
         </UiFormField>
         <UiButton type="submit" class="w-full" :disabled="loading">
-          <Loader2 v-if="loading" class="size-4 mr-2 animate-spin" />
+          <Loader2 v-if="loading" class="size-4 animate-spin" />
           {{ loading ? 'Signing in...' : 'Sign in' }}
         </UiButton>
       </UiForm>
@@ -75,7 +75,7 @@ const { send: login, loading } = useRequest(() => Apis.auth.login({ data: form.v
           </div>
         </div>
         <UiButton variant="outline" class="mt-4 w-full">
-          <Globe class="size-4 mr-2" />
+          <Globe class="size-4" />
           Google
         </UiButton>
       </div>

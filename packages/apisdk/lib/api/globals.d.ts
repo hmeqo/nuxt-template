@@ -89,7 +89,7 @@ type Alova2Method<
       >
     : never;
 
-export type I64 = number;
+export type UserId = number;
 export interface LoginReq {
   password: string;
   username: string;
@@ -97,26 +97,34 @@ export interface LoginReq {
 export interface RefreshReq {
   refresh_token: string;
 }
-export interface HelloReq {
+export interface Echo {
+  message: string;
+}
+export interface UploadedFile {
+  data: Blob;
+  mime_type: string;
   name: string;
+}
+export interface UploadForm {
+  file: UploadedFile;
 }
 export interface CreateUserReq {
   password: string;
   username: string;
 }
+export interface JwtEchoResp {
+  message: string;
+  user_id: UserId;
+  username: string;
+}
+export interface MessageResp {
+  message: string;
+}
 export type Perm =
-  | '*'
-  | 'user:read'
-  | 'user:write'
-  | 'user:delete'
-  | 'user:*'
-  | 'role:read'
-  | 'role:write'
-  | 'role:delete'
-  | 'role:*';
+  '*' | 'user:read' | 'user:write' | 'user:delete' | 'user:*' | 'role:read' | 'role:write' | 'role:delete' | 'role:*';
 export interface UserResp {
   created_at: string;
-  id: I64;
+  id: UserId;
   updated_at: string;
   username: string;
 }
@@ -124,10 +132,8 @@ export interface AuthStateResp {
   permissions: Perm[];
   user: UserResp;
 }
-export interface ErrorResp {
-  code: string;
-  detail?: string | null;
-  errors?: object;
+export interface SessionRenewResp {
+  expires_at: string;
 }
 export interface ChangePasswordReq {
   new_password: string;
@@ -145,8 +151,15 @@ export interface RefreshResp {
   access_token: string;
   refresh_token: string;
 }
-export interface HelloResp {
-  message: string;
+export interface FileResp {
+  mime_type: string;
+  name: string;
+  original_name: string;
+  size: number;
+  /**
+   * 下载地址，可直接 GET。
+   */
+  url: string;
 }
 export interface UserListResp {
   page: number;
@@ -154,82 +167,9 @@ export interface UserListResp {
   total: number;
   users: UserResp[];
 }
-export interface MessageResp {
-  message: string;
-}
 declare global {
   interface Apis {
-    chore: {
-      /**
-       * ---
-       *
-       * [GET]
-       *
-       * **path:** /api
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      index<Config extends Alova2MethodConfig<unknown>>(config?: Config): Alova2Method<unknown, 'chore.index', Config>;
-      /**
-       * ---
-       *
-       * [GET]
-       *
-       * **path:** /api/error
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   code: string
-       *   detail?: string | null
-       *   errors?: object
-       * }
-       * ```
-       */
-      error<Config extends Alova2MethodConfig<ErrorResp>>(
-        config?: Config
-      ): Alova2Method<ErrorResp, 'chore.error', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/hello
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   name: string
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   message: string
-       * }
-       * ```
-       */
-      hello<
-        Config extends Alova2MethodConfig<HelloResp> & {
-          data: HelloReq;
-        }
-      >(
-        config: Config
-      ): Alova2Method<HelloResp, 'chore.hello', Config>;
-    };
-    jwtDemo: {
+    jwt: {
       /**
        * ---
        *
@@ -241,10 +181,16 @@ declare global {
        *
        * **Response**
        * ```ts
-       * type Response = null
+       * type Response = {
+       *   message: string
+       *   user_id: number
+       *   username: string
+       * }
        * ```
        */
-      echo<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'jwtDemo.echo', Config>;
+      echo<Config extends Alova2MethodConfig<JwtEchoResp>>(
+        config?: Config
+      ): Alova2Method<JwtEchoResp, 'jwt.echo', Config>;
       /**
        * ---
        *
@@ -299,7 +245,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<LoginResp, 'jwtDemo.login', Config>;
+      ): Alova2Method<LoginResp, 'jwt.login', Config>;
       /**
        * ---
        *
@@ -311,10 +257,14 @@ declare global {
        *
        * **Response**
        * ```ts
-       * type Response = null
+       * type Response = {
+       *   message: string
+       * }
        * ```
        */
-      logout<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'jwtDemo.logout', Config>;
+      logout<Config extends Alova2MethodConfig<MessageResp>>(
+        config?: Config
+      ): Alova2Method<MessageResp, 'jwt.logout', Config>;
       /**
        * ---
        *
@@ -330,15 +280,7 @@ declare global {
        *   // [items] start
        *   // [items] end
        *   permissions: (
-       *     | '*'
-       *     | 'user:read'
-       *     | 'user:write'
-       *     | 'user:delete'
-       *     | 'user:*'
-       *     | 'role:read'
-       *     | 'role:write'
-       *     | 'role:delete'
-       *     | 'role:*'
+       *     '*' | 'user:read' | 'user:write' | 'user:delete' | 'user:*' | 'role:read' | 'role:write' | 'role:delete' | 'role:*'
        *   )[]
        *   user: {
        *     created_at: string
@@ -351,7 +293,7 @@ declare global {
        */
       me<Config extends Alova2MethodConfig<AuthStateResp>>(
         config?: Config
-      ): Alova2Method<AuthStateResp, 'jwtDemo.me', Config>;
+      ): Alova2Method<AuthStateResp, 'jwt.me', Config>;
       /**
        * ---
        *
@@ -384,7 +326,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<RefreshResp, 'jwtDemo.refresh', Config>;
+      ): Alova2Method<RefreshResp, 'jwt.refresh', Config>;
     };
     auth: {
       /**
@@ -412,15 +354,7 @@ declare global {
        *   // [items] start
        *   // [items] end
        *   permissions: (
-       *     | '*'
-       *     | 'user:read'
-       *     | 'user:write'
-       *     | 'user:delete'
-       *     | 'user:*'
-       *     | 'role:read'
-       *     | 'role:write'
-       *     | 'role:delete'
-       *     | 'role:*'
+       *     '*' | 'user:read' | 'user:write' | 'user:delete' | 'user:*' | 'role:read' | 'role:write' | 'role:delete' | 'role:*'
        *   )[]
        *   user: {
        *     created_at: string
@@ -449,10 +383,33 @@ declare global {
        *
        * **Response**
        * ```ts
-       * type Response = null
+       * type Response = {
+       *   message: string
+       * }
        * ```
        */
-      logout<Config extends Alova2MethodConfig<null>>(config?: Config): Alova2Method<null, 'auth.logout', Config>;
+      logout<Config extends Alova2MethodConfig<MessageResp>>(
+        config?: Config
+      ): Alova2Method<MessageResp, 'auth.logout', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/auth/maybe
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   message: string
+       * }
+       * ```
+       */
+      maybe<Config extends Alova2MethodConfig<MessageResp>>(
+        config?: Config
+      ): Alova2Method<MessageResp, 'auth.maybe', Config>;
       /**
        * ---
        *
@@ -468,15 +425,7 @@ declare global {
        *   // [items] start
        *   // [items] end
        *   permissions: (
-       *     | '*'
-       *     | 'user:read'
-       *     | 'user:write'
-       *     | 'user:delete'
-       *     | 'user:*'
-       *     | 'role:read'
-       *     | 'role:write'
-       *     | 'role:delete'
-       *     | 'role:*'
+       *     '*' | 'user:read' | 'user:write' | 'user:delete' | 'user:*' | 'role:read' | 'role:write' | 'role:delete' | 'role:*'
        *   )[]
        *   user: {
        *     created_at: string
@@ -490,6 +439,102 @@ declare global {
       me<Config extends Alova2MethodConfig<AuthStateResp>>(
         config?: Config
       ): Alova2Method<AuthStateResp, 'auth.me', Config>;
+      /**
+       * ---
+       *
+       * [POST] 推移空闲有效期，并在同一响应里重发 cookie。
+       *
+       * **path:** /api/auth/renew
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   expires_at: string
+       * }
+       * ```
+       */
+      renew<Config extends Alova2MethodConfig<SessionRenewResp>>(
+        config?: Config
+      ): Alova2Method<SessionRenewResp, 'auth.renew', Config>;
+    };
+    chore: {
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/echo
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   message: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   message: string
+       * }
+       * ```
+       */
+      echo<
+        Config extends Alova2MethodConfig<Echo> & {
+          data: Echo;
+        }
+      >(
+        config: Config
+      ): Alova2Method<Echo, 'chore.echo', Config>;
+    };
+    files: {
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/files
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   file: {
+       *     data: Blob
+       *     mime_type: string
+       *     name: string
+       *   }
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = {
+       *   mime_type: string
+       *   name: string
+       *   original_name: string
+       *   size: number
+       *   // 下载地址，可直接 GET。
+       *   url: string
+       * }
+       * ```
+       */
+      upload<
+        Config extends Alova2MethodConfig<FileResp> & {
+          data: UploadForm;
+        }
+      >(
+        config: Config
+      ): Alova2Method<FileResp, 'files.upload', Config>;
     };
     user: {
       /**
@@ -613,7 +658,7 @@ declare global {
       get<
         Config extends Alova2MethodConfig<UserResp> & {
           pathParams: {
-            id: I64;
+            id: UserId;
           };
         }
       >(
@@ -647,7 +692,7 @@ declare global {
       delete_<
         Config extends Alova2MethodConfig<MessageResp> & {
           pathParams: {
-            id: I64;
+            id: UserId;
           };
         }
       >(
@@ -691,7 +736,7 @@ declare global {
       change_password<
         Config extends Alova2MethodConfig<MessageResp> & {
           pathParams: {
-            id: I64;
+            id: UserId;
           };
           data: ChangePasswordReq;
         }
@@ -738,7 +783,7 @@ declare global {
       update_username<
         Config extends Alova2MethodConfig<UserResp> & {
           pathParams: {
-            id: I64;
+            id: UserId;
           };
           data: UpdateUsernameReq;
         }

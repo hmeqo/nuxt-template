@@ -2,8 +2,9 @@
   "name": "@ws/tauri",
   "version": "0.1.0",
   "dependencies": {
-    "@lucide/vue": "^1.16.0",
-    "@tauri-apps/api": "^2.10.1",
-    "@tauri-apps/cli": "^2.10.1"
+    "@iconify-json/material-symbols": "^1.2.93",
+    "@lucide/vue": "^1.48.0",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/cli": "^2.11.5"
   }
 }

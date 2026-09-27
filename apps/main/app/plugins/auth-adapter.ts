@@ -1,4 +1,4 @@
-import { BizError } from '@ws-hmeqo/alova/lib'
+import { BizError } from '@remqo/alova/lib'
 
 export default defineNuxtPlugin(() => {
   const authState = useAuthState()
