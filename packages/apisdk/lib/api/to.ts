@@ -56,14 +56,6 @@ export const $toCreateUserReq: DefineToFn<Types.CreateUserReq> = defineTo<Types.
   defaults.$initCreateUserReq
 )
 
-export const $toEcho: DefineToFn<Types.Echo> = defineTo<Types.Echo>(
-  (obj) => ({
-    message: obj?.message
-  }),
-  (obj) => ({}),
-  defaults.$initEcho
-)
-
 export const $toErrorResp: DefineToFn<Types.ErrorResp> = defineTo<Types.ErrorResp>(
   (obj) => ({
     code: obj?.code,
@@ -74,26 +66,34 @@ export const $toErrorResp: DefineToFn<Types.ErrorResp> = defineTo<Types.ErrorRes
   defaults.$initErrorResp
 )
 
+export const $toFileListResp: DefineToFn<Types.FileListResp> = defineTo<Types.FileListResp>(
+  (obj) => ({
+    files: obj?.files?.map((i: any) => $toFileResp(i)),
+    page: obj?.page,
+    per_page: obj?.per_page,
+    total: obj?.total
+  }),
+  (obj) => ({}),
+  defaults.$initFileListResp
+)
+
 export const $toFileResp: DefineToFn<Types.FileResp> = defineTo<Types.FileResp>(
   (obj) => ({
+    attached_at: obj?.attached_at,
+    created_at: obj?.created_at,
+    hash: obj?.hash,
+    height: obj?.height,
+    id: obj?.id,
     mime_type: obj?.mime_type,
-    name: obj?.name,
     original_name: obj?.original_name,
     size: obj?.size,
-    url: obj?.url
+    state: obj?.state,
+    thumbnail_url: obj?.thumbnail_url,
+    url: obj?.url,
+    width: obj?.width
   }),
   (obj) => ({}),
   defaults.$initFileResp
-)
-
-export const $toJwtEchoResp: DefineToFn<Types.JwtEchoResp> = defineTo<Types.JwtEchoResp>(
-  (obj) => ({
-    message: obj?.message,
-    user_id: obj?.user_id,
-    username: obj?.username
-  }),
-  (obj) => ({ user_id: obj?.user?.id }),
-  defaults.$initJwtEchoResp
 )
 
 export const $toLoginReq: DefineToFn<Types.LoginReq> = defineTo<Types.LoginReq>(
@@ -140,12 +140,33 @@ export const $toRefreshResp: DefineToFn<Types.RefreshResp> = defineTo<Types.Refr
   defaults.$initRefreshResp
 )
 
-export const $toSessionRenewResp: DefineToFn<Types.SessionRenewResp> = defineTo<Types.SessionRenewResp>(
+export const $toResetPasswordReq: DefineToFn<Types.ResetPasswordReq> = defineTo<Types.ResetPasswordReq>(
   (obj) => ({
-    expires_at: obj?.expires_at
+    new_password: obj?.new_password
   }),
   (obj) => ({}),
-  defaults.$initSessionRenewResp
+  defaults.$initResetPasswordReq
+)
+
+export const $toSessionListResp: DefineToFn<Types.SessionListResp> = defineTo<Types.SessionListResp>(
+  (obj) => ({
+    sessions: obj?.sessions?.map((i: any) => $toSessionResp(i))
+  }),
+  (obj) => ({}),
+  defaults.$initSessionListResp
+)
+
+export const $toSessionResp: DefineToFn<Types.SessionResp> = defineTo<Types.SessionResp>(
+  (obj) => ({
+    created_at: obj?.created_at,
+    current: obj?.current,
+    expires_at: obj?.expires_at,
+    id: obj?.id,
+    ip: obj?.ip,
+    user_agent: obj?.user_agent
+  }),
+  (obj) => ({}),
+  defaults.$initSessionResp
 )
 
 export const $toUpdateUsernameReq: DefineToFn<Types.UpdateUsernameReq> = defineTo<Types.UpdateUsernameReq>(
@@ -158,20 +179,10 @@ export const $toUpdateUsernameReq: DefineToFn<Types.UpdateUsernameReq> = defineT
 
 export const $toUploadForm: DefineToFn<Types.UploadForm> = defineTo<Types.UploadForm>(
   (obj) => ({
-    file: $toUploadedFile(obj?.file)
+    file: obj?.file
   }),
   (obj) => ({}),
   defaults.$initUploadForm
-)
-
-export const $toUploadedFile: DefineToFn<Types.UploadedFile> = defineTo<Types.UploadedFile>(
-  (obj) => ({
-    data: obj?.data,
-    mime_type: obj?.mime_type,
-    name: obj?.name
-  }),
-  (obj) => ({}),
-  defaults.$initUploadedFile
 )
 
 export const $toUserListResp: DefineToFn<Types.UserListResp> = defineTo<Types.UserListResp>(

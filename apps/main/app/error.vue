@@ -1,40 +1,23 @@
 <script setup lang="ts">
-import { SearchX, Ban, TriangleAlert, CircleAlert, Home, RotateCcw } from '@lucide/vue'
-
 const error = useError()
 
-const statusCode = computed(() => error.value?.status ?? 500)
-const message = computed(() => error.value?.message || 'An unexpected error occurred')
-
-const iconComponent = computed(() => {
-  if (statusCode.value === 404) return SearchX
-  if (statusCode.value === 403) return Ban
-  if (statusCode.value === 500) return TriangleAlert
-  return CircleAlert
+const title = computed(() => {
+  if (error.value?.statusCode === 404) return '找不到这个页面'
+  if (error.value?.statusCode === 403) return '没有访问权限'
+  if ((error.value?.statusCode ?? 500) >= 500) return '服务暂时不可用'
+  return '出了点问题'
 })
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center bg-background">
-    <div class="flex flex-col items-center text-center max-w-xs gap-4">
-      <div class="flex size-16 items-center justify-center rounded-2xl bg-muted">
-        <component :is="iconComponent" class="size-8 text-muted-foreground/60" />
-      </div>
-      <div>
-        <p class="text-5xl font-bold text-muted-foreground/20 tabular-nums">{{ statusCode }}</p>
-        <p class="text-sm text-muted-foreground mt-2">{{ message }}</p>
-      </div>
-      <div class="flex items-center gap-2 pt-2">
-        <NuxtLink to="/">
-          <UiButton variant="outline" size="sm">
-            <Home class="size-4" />
-            Home
-          </UiButton>
-        </NuxtLink>
-        <UiButton variant="ghost" size="sm" @click="clearError({ redirect: '/' })">
-          <RotateCcw class="size-4" />
-          Retry
-        </UiButton>
+  <div class="flex min-h-screen items-center justify-center bg-background p-4">
+    <div class="flex max-w-sm flex-col items-start gap-3">
+      <p class="text-4xl font-bold tabular-nums">{{ error?.statusCode ?? 500 }}</p>
+      <p class="text-sm font-medium">{{ title }}</p>
+      <p v-if="error?.message" class="font-mono text-xs text-muted-foreground/60">{{ error.message }}</p>
+      <div class="mt-2 flex items-center gap-3">
+        <UiButton @click="clearError({ redirect: '/' })">返回主页</UiButton>
+        <UiButton variant="outline" @click="clearError()">重试</UiButton>
       </div>
     </div>
   </div>

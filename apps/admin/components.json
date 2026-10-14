@@ -14,8 +14,8 @@
   "pointer": false,
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "utils": "@ws/ink/utils/cn",
+    "ui": "@ws/ink/ui",
     "lib": "@/lib",
     "composables": "@/composables"
   },

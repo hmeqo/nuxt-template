@@ -1,8 +1,0 @@
-{
-  "name": "Default Machine",
-  "camera": {
-    "index": 0,
-    "exposure_us": 5000,
-    "gain": 1.0
-  }
-}

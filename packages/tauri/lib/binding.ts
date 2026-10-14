@@ -5,13 +5,76 @@
 
 
 export const commands = {
-async httpUrl() : Promise<Result<string, string>> {
+async appInfo() : Promise<AppInfo> {
+    return await TAURI_INVOKE("app_info");
+},
+/**
+ * 弹系统文件选择器；用户取消返回 `None`。
+ * 
+ * `blocking_*` 不能跑在主线程上，这里用 `async fn` 命令（tauri 把它放到异步运行时线程池）来满足。
+ */
+async openDocument() : Promise<Result<Document | null, IpcError>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("http_url") };
+    return { status: "ok", data: await TAURI_INVOKE("open_document") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * 按已知路径打开：最近列表和「拖文件进窗口」都走这里。
+ */
+async openPath(path: string) : Promise<Result<Document, IpcError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("open_path", { path }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async saveDocument(path: string, text: string) : Promise<Result<Document, IpcError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("save_document", { path, text }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * 无路径的「另存为」；用户取消返回 `None`。
+ */
+async saveDocumentAs(text: string, suggestedName: string | null) : Promise<Result<Document | null, IpcError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("save_document_as", { text, suggestedName }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async recentDocuments() : Promise<RecentDocument[]> {
+    return await TAURI_INVOKE("recent_documents");
+},
+/**
+ * 用系统默认程序打开链接（「帮助 → 项目主页」走这里，前端不需要 opener 的 JS 包）。
+ */
+async openExternal(url: string) : Promise<Result<null, IpcError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("open_external", { url }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async clearRecents() : Promise<Result<null, IpcError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("clear_recents") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async quit() : Promise<void> {
+    await TAURI_INVOKE("quit");
 }
 }
 
@@ -25,7 +88,21 @@ async httpUrl() : Promise<Result<string, string>> {
 
 /** user-defined types **/
 
-
+export type AppInfo = { name: string; version: string; identifier: string; tauriVersion: string; os: string; arch: string }
+export type Document = { path: string; name: string; text: string; 
+/**
+ * 字节数（读取上限 8 MB，u32 足够且避开 specta 的 BigInt 导出限制）
+ */
+size: number; modifiedMs: number | null }
+/**
+ * 命令统一错误：specta 要求 `Serialize` + `Type`，前端拿到 `{ message }` 直接可读。
+ */
+export type IpcError = { message: string }
+export type RecentDocument = { path: string; name: string; 
+/**
+ * `alias` 兼容早期写下的 snake_case 存档，避免升级后把最近列表读空
+ */
+openedMs: number }
 
 /** tauri-specta globals **/
 

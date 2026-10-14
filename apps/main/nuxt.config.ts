@@ -1,59 +1,16 @@
-const [seoEnabled, sitemapRoutes] = ((): [boolean, string[]] => {
-  const enabled = process.env.ENABLE_SEO === 'true' ? true : false
-  return [enabled, enabled ? ['/sitemap.xml'] : []]
-})()
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  experimental: {
-    serverAppConfig: false,
-  },
-
-  runtimeConfig: {
-    public: {
-      apiBase: 'http://localhost:8000/api',
-    },
-  },
   modules: [
+    '@ws/app-preset',
     '@remqo/nuxt-infra',
     '@remqo/tailwindcss',
     '@remqo/shadcn',
-    '@remqo/alova',
     // '@remqo/pwa',
-    '@ws/apisdk',
+    '@ws/ink',
     '@ws/tauri',
   ],
-  components: [
-    { path: '~/components/uix', prefix: 'uix', extensions: ['.vue'] },
-    { path: '~/components' },
-    // { path: '~/components/ui', prefix: 'ui', pathPrefix: false, extensions: ['ts'] },
-  ],
-  imports: {
-    // dirs: ['~/stores'],
-    // imports: [{ from: '~/lib/router', name: 'getLoginUrl' }],
-  },
-  app: {
-    pageTransition: { name: 'fade', mode: 'out-in' },
-    buildAssetsDir: 'static',
-    rootAttrs: {
-      id: 'root',
-    },
-    head: {
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    },
-  },
-  css: [
-    '~/assets/css/index.css',
-    '~/assets/css/tailwind.css',
-    '~/assets/css/fonts.css',
-    '~/assets/css/utilities.css',
-    '~/assets/css/transition.css',
-  ],
-  fonts: {
-    families: [{ name: 'Maple Mono', provider: 'none' }],
-  },
+  css: ['~/assets/css/utilities.css'],
   routeRules: {
     '/**': {
       ssr: false,
@@ -61,63 +18,16 @@ export default defineNuxtConfig({
     },
   },
 
-  colorMode: {
-    preference: 'dark',
-  },
-  csurf: {
-    https: false,
-    cookieKey: 'csrftoken',
-    headerName: 'X-Csrftoken',
-    methodsToProtect: [],
-  },
-
   site: {
-    // url: 'https://example.com',
-    indexable: seoEnabled,
-  },
-  seo: {
-    meta: {
-      description: '',
-    },
+    name: 'App',
+    description: 'App 桌面端',
+    indexable: false,
   },
   sitemap: {
-    enabled: seoEnabled,
+    enabled: false,
   },
-  // pwa: {
-  //   manifest: {
-  //     name: 'App',
-  //     short_name: 'App',
-  //     theme_color: '#0a0a0a',
-  //     description: 'App'
-  //   }
-  // },
 
   nitro: {
     compressPublicAssets: true,
-    prerender: {
-      routes: [
-        // '/',
-        // '/login',
-        ...sitemapRoutes,
-      ],
-    },
-  },
-  vite: {
-    build: {
-      terserOptions: {
-        compress: {
-          drop_console: true,
-        },
-      },
-    },
-  },
-
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        // experimentalDecorators: true,
-        // emitDecoratorMetadata: true
-      },
-    },
   },
 })

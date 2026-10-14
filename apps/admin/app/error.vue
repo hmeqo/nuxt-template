@@ -1,30 +1,23 @@
 <script setup lang="ts">
 const error = useError()
 
-const statusCode = computed(() => error.value?.status ?? 500)
-const message = computed(() => error.value?.message || '未知错误')
-
-const icon = computed(() => {
-  if (statusCode.value === 404) return 'material-symbols:search-off'
-  if (statusCode.value === 403) return 'material-symbols:block'
-  if (statusCode.value === 500) return 'material-symbols:error-outline'
-  return 'material-symbols:warning-outline'
+const title = computed(() => {
+  if (error.value?.statusCode === 404) return '找不到这个页面'
+  if (error.value?.statusCode === 403) return '没有访问权限'
+  if ((error.value?.statusCode ?? 500) >= 500) return '服务暂时不可用'
+  return '出了点问题'
 })
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-8">
-    <div class="flex flex-col items-center text-center max-w-xs gap-4">
-      <Icon :name="icon" class="size-16 text-muted-foreground/30" />
-      <div>
-        <p class="text-5xl font-bold text-muted-foreground/20">{{ statusCode }}</p>
-        <p class="text-sm text-muted-foreground mt-2">{{ message }}</p>
-      </div>
-      <div class="flex items-center gap-2 pt-2">
-        <NuxtLink to="/">
-          <UiButton variant="outline" size="sm">主页</UiButton>
-        </NuxtLink>
-        <UiButton variant="ghost" size="sm" @click="clearError({ redirect: '/' })">重试</UiButton>
+  <div class="flex min-h-screen items-center justify-center bg-background p-4">
+    <div class="flex max-w-sm flex-col items-start gap-3">
+      <p class="text-4xl font-bold tabular-nums">{{ error?.statusCode ?? 500 }}</p>
+      <p class="text-sm font-medium">{{ title }}</p>
+      <p v-if="error?.message" class="font-mono text-xs text-muted-foreground/60">{{ error.message }}</p>
+      <div class="mt-2 flex items-center gap-3">
+        <UiButton @click="clearError({ redirect: '/' })">返回主页</UiButton>
+        <UiButton variant="outline" @click="clearError()">重试</UiButton>
       </div>
     </div>
   </div>

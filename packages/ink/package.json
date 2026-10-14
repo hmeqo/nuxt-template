@@ -1,0 +1,17 @@
+{
+  "name": "@ws/ink",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./module.ts",
+    "./composables": "./exports/composables.ts",
+    "./utils": "./exports/utils.ts",
+    "./utils/cn": "./utils/cn.ts",
+    "./tailwind.css": "./tailwind.css",
+    "./utilities.css": "./utilities.css"
+  },
+  "dependencies": {
+    "@lucide/vue": "^1.48.0",
+    "@nuxt/kit": "^4.0.0",
+    "defu": "^6.1.7"
+  }
+}

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   omp stats 的风格原语（Tailwind 表达不了或表达啰嗦的那几条）
+   ========================================================================== */
+
+/* 卡片外壳：顶部受光的发丝边（双层背景 = padding-box 填色 + border-box 描边） */
+.hairline {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(180deg, var(--line-3), var(--line-1) 40%) border-box;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60rem 28rem at 12% -10%, color-mix(in srgb, var(--brand-a) 7%, transparent), transparent 70%),
+    radial-gradient(50rem 26rem at 95% -12%, color-mix(in srgb, var(--brand-b) 6%, transparent), transparent 70%);
+}
+
+/* silver 没有色相：微光换成它自己的两道消光（亮底淡灰、暗底亮银），而不是干脆不铺 */
+:root[data-accent='silver'] .ambient {
+  background:
+    radial-gradient(60rem 28rem at 12% -10%, color-mix(in srgb, var(--brand-a) 10%, transparent), transparent 70%),
+    radial-gradient(50rem 26rem at 95% -12%, color-mix(in srgb, var(--brand-b) 8%, transparent), transparent 70%);
+}
+
+.glass {
+  background: color-mix(in srgb, var(--chassis) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.93em;
+  letter-spacing: -0.01em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.93em;
+}
+
+/* 骨架屏：omp 的斜向高光条（不用 spinner） */
+.skeleton {
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--line-1) 0%, var(--line-2) 50%, var(--line-1) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}

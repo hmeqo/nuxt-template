@@ -3,12 +3,12 @@ packages:
   - packages/*
   - packages/remqo/*
 allowBuilds:
-  "@parcel/watcher": true
-  "@varlet/nuxt": true
+  '@parcel/watcher': true
+  '@varlet/nuxt': true
   esbuild: true
   unrs-resolver: true
   vue-demi: true
 overrides:
   vite: npm:rolldown-vite@latest
 publicHoistPattern:
-  - "*"
+  - '*'

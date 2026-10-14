@@ -1,5 +1,5 @@
 import { addImports, addImportsDir, addRouteMiddleware, createResolver, defineNuxtModule } from '@nuxt/kit'
-import { defu } from 'defu'
+import defu from 'defu'
 
 export default defineNuxtModule({
   meta: {
@@ -21,7 +21,6 @@ export default defineNuxtModule({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // @ts-expect-error
     nuxt.options.csurf = defu(nuxt.options.csurf, {
       https: false,
       cookieKey: 'csrftoken',
@@ -34,10 +33,6 @@ export default defineNuxtModule({
       { from: resolver.resolve('./lib/api'), name: 'useClient' },
     ])
 
-    addImportsDir([
-      resolver.resolve('./composables'),
-      resolver.resolve('./stores'),
-      resolver.resolve('./utils'),
-    ])
+    addImportsDir([resolver.resolve('./composables'), resolver.resolve('./stores'), resolver.resolve('./utils')])
   },
 })

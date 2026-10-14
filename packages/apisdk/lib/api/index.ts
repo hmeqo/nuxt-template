@@ -10,7 +10,7 @@ export const eventSystem = createEventSystem()
 const handlers = createAlovaHandlers(eventSystem.emit)
 
 export const alovaInstance = createAlova({
-  // baseURL: 'http://localhost:8000',
+  // 不设 baseURL：请求走同源 /api，由各 app 的 server/api 代理到 runtimeConfig.apiBase
   statesHook: VueHook,
   requestAdapter: fetchAdapter(),
   beforeRequest(method) {

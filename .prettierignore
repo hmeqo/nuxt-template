@@ -2,6 +2,7 @@
 pnpm-lock.yaml
 
 packages/tauri/lib/binding.ts
-**/app/lib/api
-!**/app/lib/api/index.ts
-**/app/components/ui
+packages/apisdk/lib/api
+!packages/apisdk/lib/api/index.ts
+
+src-tauri/target

@@ -1,315 +1,256 @@
 <script setup lang="ts">
-import { Search, Sun, Moon, Code2, Copy, Terminal, DollarSign, Users, CreditCard, Activity } from '@lucide/vue'
+import { ArrowRight, Clock, FileUp, ShieldCheck, UserPlus, UserRound, Users } from '@lucide/vue'
+import type { Component } from 'vue'
+import type { UserResp } from '@ws/apisdk/types'
 
 definePageMeta({
-  // auth: 'authenticated',
+  title: '仪表盘',
+  layout: 'default',
+  auth: 'authenticated',
 })
 
-const { darkMode } = useThemeMode()
-const { isAuthenticated } = useAuthPerms()
 const authState = useAuthState()
-const user = computed(() => authState.userChecked())
+const authPerms = useAuthPerms()
 
-const { send: logout } = useRequest(() => Apis.auth.logout(), {
-  immediate: false,
-}).onSuccess(() => {
-  useAuthState().logout()
-  navigateTo(getLoginUrl())
+const user = computed(() => authState.user())
+const perms = computed(() => authPerms.perms.value)
+
+const RECENT_PAGE_SIZE = 5
+
+// 最近注册要等 total 回来才会发请求，这之前也算「加载中」，否则会先闪一下空态
+const recentSettled = ref(false)
+// 最近注册最后一次请求的页码，重试时按同一页重新发
+const recentPage = ref(1)
+
+const notifyOverviewError = (error: unknown) => apiErrorToast('概览数据加载失败', error)
+
+// per_page=1 只为拿 total
+const {
+  data: totalData,
+  loading: totalLoading,
+  error: totalError,
+  send: loadTotal,
+} = useRequest(() => Apis.users.list({ params: { per_page: 1 } }), {
+  immediate: true,
+}).onError(({ error }) => {
+  recentSettled.value = true
+  notifyOverviewError(error)
 })
 
-// 统计数据
-const stats = [
-  { title: 'Total Revenue', value: '$45,231.89', change: '+20.1% from last month', icon: DollarSign },
-  { title: 'Subscriptions', value: '+2350', change: '+180.1% from last month', icon: Users },
-  { title: 'Sales', value: '+12,234', change: '+19% from last month', icon: CreditCard },
-  { title: 'Active Now', value: '+573', change: '+201 since last hour', icon: Activity },
-]
+// 拿到 total 后翻到最后一页，取最新注册的用户
+const {
+  data: recentData,
+  loading: recentLoading,
+  error: recentError,
+  send: loadRecent,
+} = useRequest((page: number) => Apis.users.list({ params: { page, per_page: RECENT_PAGE_SIZE } }), {
+  immediate: false,
+})
+  .onSuccess(() => {
+    recentSettled.value = true
+  })
+  .onError(({ error }) => {
+    recentSettled.value = true
+    notifyOverviewError(error)
+  })
 
-// 最近销售
-const recentSales = [
-  { name: 'Olivia Martin', email: 'olivia.martin@email.com', amount: '+$1,999.00', initials: 'OM' },
-  { name: 'Jackson Lee', email: 'jackson.lee@email.com', amount: '+$39.00', initials: 'JL' },
-  { name: 'Isabella Nguyen', email: 'isabella.nguyen@email.com', amount: '+$299.00', initials: 'IN' },
-  { name: 'William Kim', email: 'will@email.com', amount: '+$99.00', initials: 'WK' },
-  { name: 'Sofia Davis', email: 'sofia.davis@email.com', amount: '+$39.00', initials: 'SD' },
-]
+const recentPending = computed(() => recentLoading.value || !recentSettled.value)
 
-// 团队成员
-const teamMembers = [
-  { name: 'John Doe', email: 'john@example.com', role: 'Owner', initials: 'JD' },
-  { name: 'Jane Smith', email: 'jane@example.com', role: 'Member', initials: 'JS' },
-]
-
-// Cookie 设置
-const cookieSettings = [
-  {
-    id: 'necessary',
-    label: 'Strictly Necessary',
-    description: 'These cookies are essential in order to use the website and use its features.',
-    enabled: true,
+watch(
+  totalData,
+  (res) => {
+    if (!res) return
+    recentPage.value = Math.max(1, Math.ceil(res.total / RECENT_PAGE_SIZE))
+    fire(loadRecent(recentPage.value))
   },
+  { immediate: true },
+)
+
+const total = computed(() => totalData.value?.total ?? 0)
+const recentUsers = computed(() =>
+  [...(recentData.value?.users ?? [])].sort((a, b) => b.id - a.id).slice(0, RECENT_PAGE_SIZE),
+)
+
+const recentColumns: TableColumn<UserResp>[] = [
+  { key: 'username', label: '用户名' },
+  { key: 'id', label: 'ID', width: 'w-20', numeric: true },
   {
-    id: 'functional',
-    label: 'Functional Cookies',
-    description: 'These cookies allow the website to provide personalized functionality.',
-    defaultChecked: false,
-  },
-  {
-    id: 'performance',
-    label: 'Performance Cookies',
-    description: 'These cookies help to improve the performance of the website.',
-    defaultChecked: false,
+    key: 'created_at',
+    label: '创建时间',
+    width: 'w-48',
+    align: 'end',
+    text: (item) => formatDateTime(item.created_at, { seconds: false }),
   },
 ]
 
-// API 响应示例
-const apiResponse = `{
-  "status": "success",
-  "data": {
-    "user": {
-      "id": "usr_8f7d6e5c",
-      "username": "admin",
-      "role": "super_admin",
-      "last_login": "2026-02-08T02:15:32Z"
-    },
-    "stats": {
-      "requests": 152847,
-      "avg_time": "45ms",
-      "success_rate": "99.97%"
-    }
-  }
-}`
+/**
+ * 最近注册段的失败态：total 拿不到时它根本发不出请求，所以两个错误都算这一段的。
+ * 失败时这段渲染错误行（apiErrorText 原文 + 下一步），不落到空态。
+ */
+const recentFailed = computed(() => recentError.value ?? totalError.value)
 
-// 系统日志
-const systemLogs = [
-  { time: '02:29:15', level: 'info', message: 'Server started on port 3000' },
-  { time: '02:28:42', level: 'debug', message: 'Cache hit: user:profile:12345' },
-  { time: '02:28:10', level: 'warn', message: 'High memory usage: 87%' },
-  { time: '02:27:55', level: 'error', message: 'DB connection timeout' },
-]
-
-// 复制功能
-function copyToClipboard(text: string) {
-  navigator.clipboard.writeText(text)
+/** 重试那次失败的请求：total 挂了就先补 total（成功后 watch 会自动带出最近注册），否则重发最近注册这一页 */
+function retryRecent() {
+  if (totalError.value) fire(loadTotal())
+  else fire(loadRecent(recentPage.value))
 }
 
-// 日志级别颜色
-function getLogLevelColor(level: string) {
-  switch (level) {
-    case 'error':
-      return 'text-red-500'
-    case 'warn':
-      return 'text-yellow-500'
-    case 'info':
-      return 'text-blue-500'
-    case 'debug':
-      return 'text-muted-foreground'
-    default:
-      return 'text-muted-foreground'
-  }
-}
+// 趋势线要全部注册时间，per_page=100 一次拿够；拿不到就按「没有数据」画空态，不编造曲线
+const TREND_DAYS = 14
+const { data: trendData } = useRequest(() => Apis.users.list({ params: { per_page: 100 } }), { immediate: true })
+const registrationSpark = computed(() =>
+  dailyBins(
+    (trendData.value?.users ?? []).map((item) => item.created_at),
+    TREND_DAYS,
+  ).map((bin) => bin.value),
+)
+
+const { data: filesData, loading: filesLoading } = useRequest(() => Apis.files.list({ params: { per_page: 100 } }), {
+  immediate: true,
+})
+const records = computed(() => filesData.value?.files ?? [])
+
+const stats = computed<
+  { label: string; value: string; hint: string; icon: Component; loading: boolean; spark?: number[] }[]
+>(() => [
+  // 用户总数来自列表接口：请求失败时降级为 —，不要拿 0 冒充「真的没有用户」
+  {
+    label: '用户总数',
+    value: totalError.value ? '—' : String(total.value),
+    hint: '全部注册账号',
+    icon: Users,
+    loading: totalLoading.value,
+    spark: registrationSpark.value,
+  },
+  { label: '我的权限数', value: String(perms.value.length), hint: '当前账号持有', icon: ShieldCheck, loading: false },
+  {
+    label: '当前账号',
+    value: user.value?.username ?? '—',
+    hint: user.value ? `#${user.value.id}` : '未登录',
+    icon: UserRound,
+    loading: false,
+  },
+  {
+    label: '本次上传',
+    value: String(filesData.value?.total ?? 0),
+    hint: '当前账号的文件',
+    icon: FileUp,
+    loading: filesLoading.value,
+  },
+])
+
+/** 登录态由后端滑动续期 */
+const { data: sessions } = useRequest(() => Apis.auth.sessions(), { immediate: true }).onError(({ error }) =>
+  apiErrorToast('会话信息加载失败', error),
+)
+
+const currentSession = computed(() => sessions.value?.sessions.find((session) => session.current))
+
+const sessionItems = computed(() => [
+  { key: '到期时间', value: currentSession.value ? formatDateTime(currentSession.value.expires_at) : '—' },
+  { key: '持有权限' },
+])
 </script>
 
 <template>
-  <div class="flex min-h-screen w-full flex-col">
-    <!-- Header -->
-    <header class="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-10">
-      <nav
-        class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
+  <div class="flex flex-col gap-5">
+    <InkPageHeader title="仪表盘" description="账号、权限与本次上传的概览。">
+      <template #action>
+        <UiButton as-child variant="outline">
+          <NuxtLink to="/files">
+            <FileUp />
+            上传文件
+          </NuxtLink>
+        </UiButton>
+        <UiButton as-child>
+          <NuxtLink to="/users">
+            <UserPlus />
+            新建用户
+          </NuxtLink>
+        </UiButton>
+      </template>
+    </InkPageHeader>
+
+    <InkStatGrid>
+      <InkStat
+        v-for="stat in stats"
+        :key="stat.label"
+        :label="stat.label"
+        :value="stat.value"
+        :foot="stat.hint"
+        :icon="stat.icon"
+        :spark="stat.spark"
       >
-        <a href="#" class="flex items-center gap-2 text-lg font-semibold md:text-base">
-          <div class="h-6 w-6 bg-primary rounded-full" />
-          <span class="sr-only">Acme Inc</span>
-        </a>
-        <a href="#" class="text-foreground transition-colors hover:text-foreground">Dashboard</a>
-        <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Orders</a>
-        <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Products</a>
-        <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Customers</a>
-        <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Analytics</a>
-      </nav>
-      <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <div class="ml-auto flex-1 sm:flex-initial">
-          <div class="relative">
-            <Search class="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-            <UiInput type="search" placeholder="Search products..." class="pl-8 sm:w-75 md:w-50 lg:w-75" />
-          </div>
-        </div>
-        <UiButton variant="ghost" size="icon" @click="darkMode = !darkMode">
-          <Sun v-if="!darkMode" class="size-5" />
-          <Moon v-else class="size-5" />
-          <span class="sr-only">切换主题</span>
-        </UiButton>
-        <template v-if="isAuthenticated">
-          <UiDropdownMenu>
-            <UiDropdownMenuTrigger as-child>
-              <UiButton variant="ghost" class="relative h-8 w-8 rounded-full">
-                <UiAvatar class="h-8 w-8">
-                  <UiAvatarFallback>{{ user.username.slice(0, 2).toUpperCase() }}</UiAvatarFallback>
-                </UiAvatar>
-              </UiButton>
-            </UiDropdownMenuTrigger>
-            <UiDropdownMenuContent class="w-56" align="end">
-              <UiDropdownMenuLabel class="font-normal">
-                <div class="flex flex-col space-y-1">
-                  <p class="text-sm font-medium leading-none">{{ user.username }}</p>
-                </div>
-              </UiDropdownMenuLabel>
-              <UiDropdownMenuSeparator />
-              <UiDropdownMenuItem as-child>
-                <NuxtLink to="/profile">个人资料</NuxtLink>
-              </UiDropdownMenuItem>
-              <UiDropdownMenuItem as-child>
-                <NuxtLink to="/settings">设置</NuxtLink>
-              </UiDropdownMenuItem>
-              <UiDropdownMenuSeparator />
-              <UiDropdownMenuItem @click="logout"> 退出登录 </UiDropdownMenuItem>
-            </UiDropdownMenuContent>
-          </UiDropdownMenu>
+        <template v-if="stat.loading" #value>
+          <div class="skeleton h-6 w-16" />
         </template>
-        <UiButton v-else as-child variant="secondary" size="sm">
-          <NuxtLink to="/login">Sign In</NuxtLink>
-        </UiButton>
-      </div>
-    </header>
+      </InkStat>
+    </InkStatGrid>
 
-    <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-      <!-- 统计卡片 -->
-      <div class="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        <UiCard v-for="stat in stats" :key="stat.title">
-          <UiCardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-            <UiCardTitle class="text-sm font-medium">{{ stat.title }}</UiCardTitle>
-            <component :is="stat.icon" class="size-4 text-muted-foreground" />
-          </UiCardHeader>
-          <UiCardContent>
-            <div class="text-2xl font-bold">{{ stat.value }}</div>
-            <p class="text-xs text-muted-foreground">{{ stat.change }}</p>
-          </UiCardContent>
-        </UiCard>
-      </div>
+    <ConsoleUploadTrendCard :records="records" />
 
-      <!-- 概览图表 + 最近销售 -->
-      <div class="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-        <UiCard class="xl:col-span-2">
-          <UiCardHeader class="flex flex-row items-center">
-            <div class="grid gap-2">
-              <UiCardTitle>Overview</UiCardTitle>
-              <UiCardDescription>Monthly revenue overview.</UiCardDescription>
-            </div>
-          </UiCardHeader>
-          <UiCardContent>
-            <div class="h-75 w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
-              Chart Placeholder
-            </div>
-          </UiCardContent>
-        </UiCard>
-
-        <UiCard>
-          <UiCardHeader>
-            <UiCardTitle>Recent Sales</UiCardTitle>
-            <UiCardDescription>You made 265 sales this month.</UiCardDescription>
-          </UiCardHeader>
-          <UiCardContent class="grid gap-8">
-            <div v-for="sale in recentSales" :key="sale.email" class="flex items-center gap-4">
-              <div class="hidden h-9 w-9 sm:flex rounded-full bg-primary/10 items-center justify-center">
-                <span class="text-xs font-medium">{{ sale.initials }}</span>
-              </div>
-              <div class="grid gap-1">
-                <p class="text-sm font-medium leading-none">{{ sale.name }}</p>
-                <p class="text-sm text-muted-foreground">{{ sale.email }}</p>
-              </div>
-              <div class="ml-auto font-medium">{{ sale.amount }}</div>
-            </div>
-          </UiCardContent>
-        </UiCard>
-      </div>
-
-      <!-- 团队成员 + Cookie 设置 -->
-      <div class="grid gap-4 md:gap-8 lg:grid-cols-3">
-        <UiCard>
-          <UiCardHeader>
-            <UiCardTitle>Team Members</UiCardTitle>
-            <UiCardDescription>Invite your team members to collaborate.</UiCardDescription>
-          </UiCardHeader>
-          <UiCardContent class="grid gap-6">
-            <div v-for="member in teamMembers" :key="member.email" class="flex items-center justify-between space-x-4">
-              <div class="flex items-center space-x-4">
-                <div class="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                  <span class="text-xs">{{ member.initials }}</span>
-                </div>
-                <div>
-                  <p class="text-sm font-medium leading-none">{{ member.name }}</p>
-                  <p class="text-sm text-muted-foreground">{{ member.email }}</p>
-                </div>
-              </div>
-              <UiButton variant="outline" size="sm">{{ member.role }}</UiButton>
-            </div>
-          </UiCardContent>
-        </UiCard>
-
-        <UiCard class="col-span-2">
-          <UiCardHeader>
-            <UiCardTitle>Cookie Settings</UiCardTitle>
-            <UiCardDescription>Manage your cookie settings here.</UiCardDescription>
-          </UiCardHeader>
-          <UiCardContent class="grid gap-6">
-            <div
-              v-for="setting in cookieSettings"
-              :key="setting.id"
-              class="flex items-center justify-between space-x-2"
-            >
-              <UiLabel :for="setting.id" class="flex flex-col space-y-1">
-                <span class="self-start">{{ setting.label }}</span>
-                <span class="font-normal leading-snug text-muted-foreground">{{ setting.description }}</span>
-              </UiLabel>
-              <UiSwitch :id="setting.id" :default-value="setting.enabled" />
-            </div>
-          </UiCardContent>
-        </UiCard>
-      </div>
-
-      <!-- 开发者工具区域 -->
-      <div class="grid gap-4 md:gap-8 lg:grid-cols-2">
-        <!-- API 响应展示 -->
-        <UiCard>
-          <UiCardHeader class="flex flex-row items-center justify-between">
-            <div>
-              <UiCardTitle class="flex items-center gap-2">
-                <Code2 class="size-4" />
-                API Response
-              </UiCardTitle>
-              <UiCardDescription>Sample JSON response from /api/user</UiCardDescription>
-            </div>
-            <UiButton variant="ghost" size="icon" @click="copyToClipboard(apiResponse)">
-              <Copy class="size-4" />
+    <InkDataTable
+      :rows="recentUsers"
+      :columns="recentColumns"
+      :row-key="(item) => item.id"
+      :loading="recentPending"
+      :error="recentFailed"
+      error-title="最近注册加载失败"
+      :error-text="apiErrorText(recentFailed)"
+      empty-title="还没有其他账号"
+      empty-description="创建账号后，最新的注册记录会出现在这里，最多展示 5 条。"
+      :empty-icon="Users"
+      dense
+      @retry="retryRecent()"
+    >
+      <template #header>
+        <UiCardHeader>
+          <UiCardTitle class="flex items-center gap-2">
+            <Users class="size-3.5 text-ink-2" />
+            最近注册
+          </UiCardTitle>
+          <UiCardDescription>最新加入的 5 个账号</UiCardDescription>
+          <UiCardAction>
+            <UiButton as-child variant="ghost" size="sm">
+              <NuxtLink class="flex items-center" to="/users">
+                查看全部
+                <ArrowRight />
+              </NuxtLink>
             </UiButton>
-          </UiCardHeader>
-          <UiCardContent>
-            <pre class="font-mono text-xs bg-muted/50 p-4 rounded-lg overflow-x-auto leading-relaxed">{{
-              apiResponse
-            }}</pre>
-          </UiCardContent>
-        </UiCard>
+          </UiCardAction>
+        </UiCardHeader>
+      </template>
 
-        <!-- 系统日志 -->
-        <UiCard>
-          <UiCardHeader>
-            <UiCardTitle class="flex items-center gap-2">
-              <Terminal class="size-4" />
-              System Logs
-            </UiCardTitle>
-            <UiCardDescription>Recent application logs</UiCardDescription>
-          </UiCardHeader>
-          <UiCardContent>
-            <div class="font-mono text-xs bg-muted/50 p-4 rounded-lg space-y-2">
-              <div v-for="log in systemLogs" :key="log.time" class="flex gap-3">
-                <span class="text-muted-foreground shrink-0">{{ log.time }}</span>
-                <span :class="[getLogLevelColor(log.level), 'uppercase shrink-0 w-12']">{{ log.level }}</span>
-                <span class="text-foreground">{{ log.message }}</span>
-              </div>
+      <template #empty-action>
+        <UiButton as-child variant="outline">
+          <NuxtLink to="/users">去新建用户</NuxtLink>
+        </UiButton>
+      </template>
+    </InkDataTable>
+
+    <UiCard>
+      <UiCardHeader>
+        <UiCardTitle class="flex items-center gap-2">
+          <Clock class="size-3.5 text-ink-2" />
+          当前会话
+        </UiCardTitle>
+        <UiCardDescription>登录状态随使用自动延长。</UiCardDescription>
+      </UiCardHeader>
+
+      <UiCardContent>
+        <InkKeyValue :items="sessionItems">
+          <template #value="{ item }">
+            <div v-if="item.key === '持有权限'" class="flex flex-wrap items-center gap-1.5">
+              <UiBadge v-for="perm in perms.slice(0, 6)" :key="perm" variant="secondary" class="font-mono">
+                {{ perm === '*' ? '全部权限' : perm }}
+              </UiBadge>
+              <UiBadge v-if="perms.length > 6" variant="outline">+{{ perms.length - 6 }}</UiBadge>
+              <span v-if="!perms.length" class="text-[12px] text-ink-3">没有额外权限</span>
             </div>
-          </UiCardContent>
-        </UiCard>
-      </div>
-    </main>
+            <template v-else>{{ item.value ?? '—' }}</template>
+          </template>
+        </InkKeyValue>
+      </UiCardContent>
+    </UiCard>
   </div>
 </template>

@@ -1,22 +1,22 @@
-.image-render-pixel {
-  image-rendering: pixelated;
+/* 面板分隔条：1px 发丝线，两侧各 3px 隐形抓取区（reka 的 SplitterResizeHandle） */
+.pane-resizer {
+  position: relative;
+  flex: none;
+  width: 1px;
+  cursor: col-resize;
+  background: var(--line-1);
+  transition: background-color 120ms;
 }
 
-/* Scrollbar styling */
-*::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+.pane-resizer::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline: -3px;
 }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-foreground);
+.pane-resizer:hover,
+.pane-resizer:focus-visible {
+  background: var(--brand);
+  outline: none;
 }

@@ -1,9 +1,13 @@
 {
   "name": "@ws/tauri",
   "version": "0.1.0",
+  "exports": {
+    ".": "./module.ts",
+    "./lib/binding": "./lib/binding.ts"
+  },
   "dependencies": {
-    "@iconify-json/material-symbols": "^1.2.93",
     "@lucide/vue": "^1.48.0",
+    "@nuxt/kit": "^4.0.0",
     "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/cli": "^2.11.5"
   }

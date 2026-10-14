@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "app",
+  "productName": "App",
   "version": "0.1.0",
-  "identifier": "com.app.test",
+  "identifier": "com.example.app",
   "build": {
     "frontendDist": "../apps/main/.output/public",
     "devUrl": "http://localhost:3000",
@@ -12,12 +12,16 @@
   "app": {
     "windows": [
       {
-        "title": "app",
-        "width": 1250,
-        "height": 750,
+        "label": "main",
+        "title": "App",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 960,
+        "minHeight": 600,
         "resizable": true,
         "decorations": false,
-        "dragDropEnabled": false
+        "dragDropEnabled": true,
+        "backgroundColor": "#000000"
       }
     ],
     "security": {
@@ -27,12 +31,6 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
   }
 }

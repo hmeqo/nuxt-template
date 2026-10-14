@@ -6,7 +6,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "run-p lint format:check",
+    "check": "run-p lint format:check typecheck",
+    "typecheck": "pnpm -r --filter './apps/*' run typecheck",
     "gen:api": "alova gen -f"
   },
   "devDependencies": {

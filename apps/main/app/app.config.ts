@@ -1,10 +1,7 @@
 export default defineAppConfig({
-  tauriApp: {
+  app: {
     name: 'App',
-    navigation: [
-      { label: 'Dashboard', icon: 'layout-dashboard', to: '/' },
-      { label: 'Analytics', icon: 'bar-chart-3', to: '/analytics' },
-      { label: 'Settings', icon: 'settings', to: '/settings' },
-    ],
+    /** 「帮助 → 项目主页」用系统浏览器打开的地址 */
+    homepage: 'https://github.com/hmeqo/nuxt-template',
   },
 })

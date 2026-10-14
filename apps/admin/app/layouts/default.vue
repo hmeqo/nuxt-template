@@ -1,3 +1,5 @@
 <template>
-  <slot />
+  <ConsoleLayout>
+    <slot />
+  </ConsoleLayout>
 </template>

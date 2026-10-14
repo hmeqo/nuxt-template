@@ -5,10 +5,14 @@
     ".": "./module.ts",
     "./lib": "./lib/api/index.ts",
     "./types": "./types/index.d.ts",
-    "./types/*": "./types/*.d.ts"
+    "./types/*": "./types/*.d.ts",
+    "./utils": "./utils/request.ts"
   },
   "dependencies": {
+    "@ws/ink": "workspace:^",
     "@remqo/alova": "workspace:^",
-    "nuxt-csurf": "^1.6.6"
+    "defu": "^6.1.7",
+    "nuxt-csurf": "^1.6.6",
+    "uuid": "^14.0.2"
   }
 }

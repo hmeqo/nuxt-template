@@ -1,0 +1,326 @@
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * 设计语言照搬 omp stats（packages/stats/src/client/styles.css）：
+ * 纯黑机身 + 一层内嵌面板 + alpha 发丝边 + 一条 cyan→pink 强调渐变。
+ * 表面梯级（由暗到亮）：chassis → panel → card → raised。
+ */
+@theme inline {
+  --font-sans:
+    Inter, 'Inter Variable', system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
+    'Source Han Sans SC', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Maple Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* ---- omp 令牌：可直接用 bg-panel / text-ink-3 / border-line-2 / bg-hover ---- */
+  --color-chassis: var(--chassis);
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-overlay: var(--overlay);
+  --color-focus: var(--focus);
+  --color-hover: var(--hover);
+  --color-selected: var(--selected);
+  --color-line-1: var(--line-1);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-line-4: var(--line-4);
+  --color-ink-1: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-ink-inverse: var(--ink-inverse);
+  --color-brand: var(--brand);
+  --color-brand-a: var(--brand-a);
+  --color-brand-b: var(--brand-b);
+  --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-live: var(--live);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* omp 正文 13.5px（行高随比例缩放） */
+  --text-sm: 0.84375rem;
+}
+
+/* omp stats 亮色：机身为浅灰，面板纯白，发丝边反过来 */
+:root {
+  --radius: 0.5rem;
+
+  --chassis: #f2f2f3;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --raised: #f6f6f7;
+  --overlay: rgba(255, 255, 255, 0.8);
+  --hover: rgba(0, 0, 0, 0.05);
+  --selected: rgba(0, 0, 0, 0.08);
+
+  --line-1: rgba(0, 0, 0, 0.06);
+  --line-2: rgba(0, 0, 0, 0.09);
+  --line-3: rgba(0, 0, 0, 0.14);
+  --line-4: rgba(0, 0, 0, 0.22);
+
+  --ink-1: #151518;
+  --ink-2: #26262b; /* 次级正文 #fff 上 15.4:1 */
+  --ink-3: #4b4b53; /* 说明文字 #fff 上 9.0:1 */
+  --ink-4: #9a9aa3; /* 仅占位/装饰 */
+  --ink-inverse: #ffffff;
+
+  --brand-a: #1fa9bb;
+  --brand-b: #d42ea3;
+  --brand: #c42596;
+  --brand-soft: rgba(212, 46, 163, 0.1);
+  --brand-gradient: linear-gradient(100deg, var(--brand-a), var(--brand-b));
+  --focus: #1fa9bb;
+
+  --ok: #12a36b;
+  --ok-soft: rgba(18, 163, 107, 0.11);
+  --warn: #c77c02;
+  --warn-soft: rgba(199, 124, 2, 0.11);
+  --bad: #dc3a40;
+  --bad-soft: rgba(220, 58, 64, 0.1);
+  --live: #12a36b;
+
+  --chart-grid: rgba(0, 0, 0, 0.06);
+  --chart-axis: #9a9aa2;
+  --chart-cursor: rgba(0, 0, 0, 0.04);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-3: 0 24px 64px rgba(0, 0, 0, 0.16);
+
+  --background: var(--chassis);
+  --foreground: var(--ink-1);
+  --card-foreground: var(--ink-1);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink-1);
+  --primary: var(--ink-1);
+  --primary-foreground: var(--ink-inverse);
+  --secondary: var(--raised);
+  --secondary-foreground: var(--ink-1);
+  --muted: var(--raised);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--hover);
+  --accent-foreground: var(--ink-1);
+  --destructive: var(--bad);
+  --border: var(--line-1);
+  --input: var(--line-2);
+  --ring: var(--focus);
+
+  /* 分类色盘（占比条、图例、明细行）：独立策展的色相，不由品牌色推导。
+     色值按「任意前缀都尽量可分」搜出来（OKLab + 三种色觉缺陷）：两两最小 ΔE 正常 10.4/10.7、
+     含 CVD 5.4/5.4（亮/暗），前缀 k≤6 ≥6.4/7.8；亮底对比度 ≥3.6、暗底 ≥4.8。
+     顺序随强调色预设微调（前两档贴合该主题的主色家族），所以同一分类换主题会换色——这是有意的。
+     单序列/双序列也走这套（前两档），图表里不再出现 --brand。 */
+  --series-1: #008d96;
+  --series-2: #a21a7e;
+  --series-3: #997900;
+  --series-4: #4c47c2;
+  --series-5: #176434;
+  --series-6: #cf315c;
+  --series-7: #864400;
+  --series-8: #0069ac;
+  --series-9: #be705b;
+  --series-10: #9e6cbf;
+  --series-other: #8c8c94;
+}
+
+/* omp stats 暗色：纯黑机身，面板只抬一级 */
+.dark {
+  --chassis: #000000;
+  --panel: #09090a;
+  --card: #0e0e10;
+  --raised: #17171a;
+  --overlay: rgba(14, 14, 16, 0.78);
+  --hover: rgba(255, 255, 255, 0.06);
+  --selected: rgba(255, 255, 255, 0.09);
+
+  --line-1: rgba(255, 255, 255, 0.06);
+  --line-2: rgba(255, 255, 255, 0.09);
+  --line-3: rgba(255, 255, 255, 0.14);
+  --line-4: rgba(255, 255, 255, 0.22);
+
+  --ink-1: #ededef;
+  --ink-2: #dcdce0; /* 次级正文 #0e0e10 上 13.6:1 */
+  --ink-3: #b4b4bb; /* 说明文字 #0e0e10 上 9.3:1 */
+  --ink-4: #7a7a83; /* 仅占位/装饰 */
+  --ink-inverse: #0a0a0b;
+
+  --brand-a: #5ad8e6;
+  --brand-b: #ed4abf;
+  --brand: #f068c8;
+  --brand-soft: rgba(237, 74, 191, 0.14);
+  --brand-gradient: linear-gradient(100deg, var(--brand-a), var(--brand-b));
+  --focus: #5ad8e6;
+
+  --chart-grid: rgba(255, 255, 255, 0.055);
+  --chart-axis: #5c5c64;
+  --chart-cursor: rgba(255, 255, 255, 0.05);
+
+  --ok: #3ecf8e;
+  --ok-soft: rgba(62, 207, 142, 0.13);
+  --warn: #f5a524;
+  --warn-soft: rgba(245, 165, 36, 0.13);
+  --bad: #ff6166;
+  --bad-soft: rgba(255, 97, 102, 0.13);
+  --live: #3ecf8e;
+
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  --shadow-3: 0 24px 64px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+
+  --background: var(--chassis);
+  --foreground: var(--ink-1);
+  --card-foreground: var(--ink-1);
+  --popover: var(--raised);
+  --popover-foreground: var(--ink-1);
+  --primary: var(--ink-1);
+  --primary-foreground: var(--ink-inverse);
+  --secondary: var(--raised);
+  --secondary-foreground: var(--ink-1);
+  --muted: var(--raised);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--hover);
+  --accent-foreground: var(--ink-1);
+  --destructive: var(--bad);
+  --border: var(--line-1);
+  --input: var(--line-2);
+  --ring: var(--focus);
+
+  --series-1: #00b0b9;
+  --series-2: #ff96f1;
+  --series-3: #eecc6c;
+  --series-4: #7e82ff;
+  --series-5: #99e3ab;
+  --series-6: #f05276;
+  --series-7: #c78041;
+  --series-8: #64c3ff;
+  --series-9: #ea9882;
+  --series-10: #c08ce1;
+  --series-other: #6c6c74;
+}
+
+/* 强调色预设：默认 omp（cyan→pink）；银色 = 白/银主色。
+   银色品牌是消色的，没有色相可跟，所以分类盘用标准自然序（蓝→陶土→…）打头，色值不变。 */
+:root:not(.dark)[data-accent='silver'] {
+  --brand-a: #71717a;
+  --brand-b: #a1a1aa;
+  --brand: #18181b;
+  --brand-soft: rgba(24, 24, 27, 0.06);
+  --brand-gradient: linear-gradient(100deg, var(--brand-b), var(--brand-a));
+  --focus: #a1a1aa;
+
+  --series-1: #0069ac;
+  --series-2: #be705b;
+  --series-3: #864400;
+  --series-4: #4c47c2;
+  --series-5: #176434;
+  --series-6: #997900;
+  --series-7: #008d96;
+  --series-8: #a21a7e;
+  --series-9: #cf315c;
+  --series-10: #9e6cbf;
+}
+
+:root.dark[data-accent='silver'] {
+  --brand-a: #a1a1aa;
+  --brand-b: #d4d4d8;
+  --brand: #e4e4e7;
+  --brand-soft: rgba(255, 255, 255, 0.08);
+  --brand-gradient: linear-gradient(100deg, var(--brand-a), var(--brand-b));
+  --focus: #d4d4d8;
+
+  --series-1: #64c3ff;
+  --series-2: #ea9882;
+  --series-3: #c78041;
+  --series-4: #7e82ff;
+  --series-5: #99e3ab;
+  --series-6: #eecc6c;
+  --series-7: #00b0b9;
+  --series-8: #ff96f1;
+  --series-9: #f05276;
+  --series-10: #c08ce1;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    background: var(--chassis);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply font-sans;
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  /* 滚动条：全站一套 —— 细（10px）、无轨道、thumb 走发丝色阶（hover 稍亮）。
+     只走 ::-webkit-scrollbar：WebKitGTK（Tauri/Linux）和 Chromium 都认，渲染也是同一套。
+     不要再写全局 scrollbar-width/scrollbar-color：WebKitGTK 一看到标准属性就切回 GTK 原生
+     滚动条、把 webkit 这套顶掉（Tauri 里那条又粗又亮的灰胶囊就是这么来的）；标准属性只留给
+     不认 ::-webkit-scrollbar 的内核（Firefox）。 */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-button {
+    display: none;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--line-3);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--line-4);
+  }
+  @supports not (selector(::-webkit-scrollbar)) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--line-3) transparent;
+    }
+  }
+  ::selection {
+    background: var(--brand-soft);
+    color: var(--ink-1);
+  }
+  svg {
+    display: block;
+    flex-shrink: 0;
+  }
+}
