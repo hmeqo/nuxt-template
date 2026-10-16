@@ -230,7 +230,11 @@ function cellClass(column: TableColumn<T>) {
                 </UiPopover>
               </div>
             </UiTableHead>
-            <UiTableHead v-if="hasActions" class="w-14 text-right" :class="dense && 'h-auto px-4 py-2'">
+            <UiTableHead
+              v-if="hasActions"
+              class="sticky right-0 z-2 w-14 border-l border-line-1 bg-card text-right"
+              :class="dense && 'h-auto px-4 py-2'"
+            >
               <span class="sr-only">操作</span>
             </UiTableHead>
           </UiTableRow>
@@ -285,13 +289,16 @@ function cellClass(column: TableColumn<T>) {
           <template v-else>
             <UiContextMenu v-for="row in rows" :key="rowKey(row)">
               <UiContextMenuTrigger as-child>
-                <UiTableRow>
+                <UiTableRow class="bg-card">
                   <UiTableCell v-for="column in columns" :key="column.key" :class="cellClass(column)">
                     <slot :name="`cell-${column.key}`" :row="row" :column="column">
                       {{ cellText(column, row) }}
                     </slot>
                   </UiTableCell>
-                  <UiTableCell v-if="hasActions" class="text-right">
+                  <UiTableCell
+                    v-if="hasActions"
+                    class="sticky right-0 w-14 border-l border-line-1 bg-inherit text-right"
+                  >
                     <UiDropdownMenu>
                       <UiDropdownMenuTrigger as-child>
                         <UiButton variant="ghost" size="icon-sm" aria-label="操作">
