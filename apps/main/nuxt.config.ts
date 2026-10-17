@@ -29,5 +29,11 @@ export default defineNuxtConfig({
 
   nitro: {
     compressPublicAssets: true,
+    prerender: {
+      routes: [
+        // '/',
+        // '/login',
+      ],
+    },
   },
 })

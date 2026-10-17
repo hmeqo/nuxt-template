@@ -1,5 +1,5 @@
 const [seoEnabled, sitemapRoutes] = ((): [boolean, string[]] => {
-  const enabled = process.env.ENABLE_SEO === 'true' ? true : false
+  const enabled = false
   return [enabled, enabled ? ['/sitemap.xml'] : []]
 })()
 

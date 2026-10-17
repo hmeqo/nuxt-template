@@ -21,8 +21,17 @@ const shared: NuxtConfig = {
       mediaBase: 'http://localhost:8000/media',
     },
   },
-  components: [{ path: '~/components' }],
+  components: [
+    { path: '~/components' },
+    // { path: '~/components/ui', prefix: 'ui', pathPrefix: false, extensions: ['ts'] },
+  ],
+  imports: {
+    // dirs: ['~/stores'],
+    // imports: [{ from: '~/lib/router', name: 'getLoginUrl' }],
+  },
   app: {
+    // layoutTransition: { name: 'fade', mode: 'out-in' },
+    // pageTransition: { name: 'fade', mode: 'out-in' },
     pageTransition: { name: 'slide-fade', mode: 'out-in' },
     buildAssetsDir: 'static',
     rootAttrs: {
@@ -41,6 +50,24 @@ const shared: NuxtConfig = {
 
   colorMode: {
     preference: 'dark',
+  },
+
+  // pwa: {
+  //   manifest: {
+  //     name: 'App',
+  //     short_name: 'App',
+  //     theme_color: '#0a0a0a',
+  //     description: 'App',
+  //   },
+  // },
+
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        // experimentalDecorators: true,
+        // emitDecoratorMetadata: true,
+      },
+    },
   },
 
   vite: {
